@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.1 2008-09-03 15:36:28 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.2 2008-09-03 16:22:49 francis Exp $';
 
 use strict;
 
@@ -20,7 +20,7 @@ use HTML::Entities;
 use Net::DNS;
 
 use Hassle;
-use Hassle::Config;
+use mySociety::Config;
 
 sub _ {
     # TODO - this is the function that will become the stub function for il18n and l10n

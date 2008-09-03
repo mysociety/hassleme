@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.1 2008-09-03 15:36:27 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.2 2008-09-03 16:22:49 francis Exp $';
 
 use strict;
 
@@ -20,7 +20,7 @@ use Digest::SHA1 qw(sha1_hex);
 use IO::Pipe;
 
 use Hassle;# qw(dbh secret);
-use Hassle::Config;
+use mySociety::Config;
 
 sub debug (@);
 if (-t STDERR) {
