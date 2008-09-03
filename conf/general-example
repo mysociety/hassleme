@@ -1,0 +1,35 @@
+<?php
+/*
+ * general-example:
+ * Example values for the "general" config file.
+ *
+ * Configuration parameters, in PHP syntax. Configuration parameters are set
+ * using the PHP define('OPTION_...', '...') function. Both perl and PHP code
+ * parse this properly, so you can use comments and conditionals and whatnot,
+ * but unless essential it's better to keep it simple....
+ *
+ * Copy this file to one called "general" in the same directory.  Or
+ * have multiple config files and use a symlink to change between them.
+ * 
+ * Copyright (c) 2008 UK Citizens Online Democracy. All rights reserved.
+ * Email: francis@mysociety.org; WWW: http://www.mysociety.org
+ *
+ * $Id: general-example,v 1.1 2008-09-03 15:36:27 francis Exp $
+ * 
+ */
+
+// PostgreSQL database for HM
+define('OPTION_HM_DB_HOST', 'localhost');
+define('OPTION_HM_DB_PORT', '5432');
+define('OPTION_HM_DB_NAME', 'hm');
+define('OPTION_HM_DB_USER', 'hm');
+define('OPTION_HM_DB_PASS', '');
+define('OPTION_PHP_MAINDB', 'hm');
+
+define('OPTION_NHASSLEDAYS', 7); # per week
+define('OPTION_NHASSLERUNS', 5); # per day
+
+define('OPTION_WEBURL', "http://hassleme.co.uk"); 
+define('OPTION_SENDMAIL', "/usr/sbin/sendmail"); 
+
+?>

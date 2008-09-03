@@ -1,0 +1,121 @@
+#!/usr/bin/perl -w
+#
+# send-hassles:
+# Actually send hassles out.
+#
+# Copyright (c) 2005 Chris Lightfoot. All rights reserved.
+# Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
+#
+
+my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.1 2008-09-03 15:36:27 francis Exp $';
+
+use strict;
+
+use FindBin;
+use lib "$FindBin::Bin/../perllib";
+
+use DBI;
+use DBD::Pg;
+use Digest::SHA1 qw(sha1_hex);
+use IO::Pipe;
+
+use Hassle;# qw(dbh secret);
+use Hassle::Config;
+
+sub debug (@);
+if (-t STDERR) {
+    eval 'sub debug (@) { print STDERR @_; }';
+} else {
+    eval 'sub debug (@) { }';
+}
+
+debug "running on " . mySociety::Config::get('NHASSLEDAYS') . " days per week\n";
+debug "running " . mySociety::Config::get('NHASSLERUNS') . " times per day\n";
+
+# Iterate over all hassles.
+my $s = dbh()->prepare('
+                select hassle.id, what, frequency, whencreated,
+                    count(recipient)
+                from hassle, recipient
+                where hassle.id = recipient.hassle_id
+                    and recipient.confirmed 
+                group by hassle.id, hassle.what, hassle.frequency,
+                    hassle.whencreated
+                having count(recipient) > 0');
+
+$s->execute();
+while (my ($hassle_id, $what, $freq, $when, $count) = $s->fetchrow_array()) {
+    debug "hassle #$hassle_id '$what' every $freq days; $count recips\n";
+
+    #
+    # The probability of sending a hassle is chosen so that the mean number of
+    # hassles is one every frequency days (i.e., "frequency" is actually a
+    # period...).
+    #
+
+    my $P = 7 / ($freq * mySociety::Config::get('NHASSLERUNS') * mySociety::Config::get('NHASSLEDAYS');
+    debug "  P = $P\n";
+
+    next if (rand() > $P);
+
+
+    # Pick a victim.
+    my ($id, $email) = dbh()->selectrow_array('
+                    select id, email from recipient
+                    where confirmed and hassle_id = ?
+                    order by random()
+                    limit 1', {},
+                    $hassle_id);
+
+    debug "  victim = #$id $email\n";
+
+    my $cancelurl = mySociety::Config::get('WEBURL') . "/U/" . token($id);
+
+    my $text = <<EOF;
+Hi,
+
+This is a hassle to remind you to $what. So get to it!
+
+ - - - - - - - 
+EOF
+
+    my $howoften = ($freq == 1
+                        ? 'roughly every day'
+                        : "roughly every $freq days");
+
+    if ($count == 1) {
+        $text .= <<EOF
+You'll be sent one of these hassles $howoften.
+EOF
+    } else {
+        $text .= <<EOF
+One of you will be sent one of these hassles $howoften.
+EOF
+    }
+
+    $text .= <<EOF;
+
+If you don't want to be hassled about this anymore, please click this
+link:
+
+    $cancelurl
+
+Note: If you asked us to hassle you about other things, only this
+particular hassle will be cancelled.
+
+Thanks,
+
+-- The HassleMe Team
+
+EOF
+
+    # XXX Wrap it.
+
+    my $subject = "Don't forget to... $what";
+    my $max_len = 50;
+    if (length($subject) > $max_len) {
+	    $subject = substr($subject,0,$max_len-3) . '...';
+	}
+    sendmail($email, $subject, $text);
+
+}

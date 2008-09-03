@@ -1,0 +1,165 @@
+/*
+ * hassleme.css
+ * Top-level style sheet for hassleme.
+ *
+ * Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
+ * Email: etienne@mysociety.org. WWW: http://www.mysociety.org
+ *
+ * $Id: hassleme.css,v 1.1 2008-09-03 15:36:28 francis Exp $
+ *
+ */
+
+/* Colours:
+#177680
+#60B19E
+#61EF6F
+*/
+
+/* Site wide styles */
+
+body, html {
+    font-family: Georgia, serif;
+    margin: 0;
+    padding: 0;
+    color: #000000;
+/*
+    background: url("/shoup.png") 100% 50% no-repeat;
+    background-attachment: fixed;
+*/
+    background-color: #ffffff;
+    min-height: 329px;
+}
+
+p, dd, li {
+    line-height: 1.4;
+}
+
+a:link { color: #0000ff; }
+a:visited { color: #000099; }
+a:hover, a:active { color: #ff0000; }
+
+h1 {
+    font-size: 200%;
+    margin: 0;
+    padding: 0.4em 10px;
+    background-color: #260073;
+    color: #ffffff;
+    border-bottom: solid 2px #6699ff;
+}
+
+h1 a:link, h1 a:visited {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+#betaTest {
+    font-size: 30%;
+    vertical-align: top;
+}
+
+#slogan {
+    font-style: italic;
+    font-size: 40%;
+    vertical-align: top;
+    text-align: right;
+    position: absolute;
+    right: 1em;
+    width: 50%;
+}
+
+#w {
+    margin: 1em;
+}
+
+#content {
+    margin: 0em auto 0em;
+    max-width: 55em;
+    padding: 0em 1em 0em 1em;
+}
+
+h2 {
+    margin: 0.5em auto 0.5em;
+}
+
+#intro, #message {
+    padding: 0em 1em 0em 1em;
+    border: solid 2px #6699ff;
+    margin-bottom: 1em;
+    background-color: #ffff99;
+}
+
+#createHassleBox, #exampleHasslesBox, #news {
+    border: solid 2px #6699ff;
+    padding: 0em 1em 1em 1em;
+    margin-bottom: 1em;
+}
+
+#createHassleBox {
+    width: 28em;
+    _width: 28em;
+    float: left;
+}
+
+/*createHassleBox textarea {
+    width: 100%;
+}*/
+
+#exampleHasslesBox, #news {
+/*
+    position: relative;
+*/
+    float: right;
+    clear: right;
+    right: 0;
+    _width: 20em;
+    width: 20em;
+    margin-bottom: 1em;
+}
+
+#createHassleBox ul, #exampleHasslesBox ul, #news ul {
+    font-size: 89%;
+    padding: 0;
+    margin: 0 0 0em 1.5em;
+}
+
+#footer {
+    clear: both;
+    font-size: 89%;
+    padding: 5px;
+    text-align: right;
+    color: #ffffff;
+    border-top: solid 2px #00ccff;
+    background-color: #260073;
+    border-width: 1px 0;
+}
+
+#footer a {
+    color: #00ccff;
+    font-weight: bold;
+}
+
+#errors, p.errors {
+    margin: 0 auto 1em;
+    background-color: #ffcccc;
+    border: solid 2px #990000;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+#errors ul li {
+    padding: 0;
+    color: #ff0000;
+    margin: 0 0 0 1.5em;
+}
+
+#signedon {
+    text-align: right;
+    font-size: 90%;
+    margin: 0 1em 0 0;
+}
+
+dt {
+    font-weight: bold;
+}
+dd {
+    margin-bottom: 1em;
+}
