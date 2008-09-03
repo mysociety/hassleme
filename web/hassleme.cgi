@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.3 2008-09-03 16:27:16 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.4 2008-09-03 16:38:16 francis Exp $';
 
 use strict;
 
@@ -21,6 +21,10 @@ use Net::DNS;
 
 use Hassle;
 use mySociety::Config;
+
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../conf/general");
+}
 
 sub _ {
     # TODO - this is the function that will become the stub function for il18n and l10n
