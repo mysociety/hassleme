@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.4 2008-09-03 16:38:16 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.5 2008-09-03 16:46:35 francis Exp $';
 
 use strict;
 
@@ -58,7 +58,7 @@ while (my ($hassle_id, $what, $freq, $when, $count) = $s->fetchrow_array()) {
     # period...).
     #
 
-    my $P = 7 / ($freq * mySociety::Config::get('NHASSLERUNS') * mySociety::Config::get('NHASSLEDAYS');
+    my $P = 7 / ($freq * mySociety::Config::get('NHASSLERUNS') * mySociety::Config::get('NHASSLEDAYS'));
     debug "  P = $P\n";
 
     next if (rand() > $P);
