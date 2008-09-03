@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.4 2008-09-03 16:38:16 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.5 2008-09-03 16:59:08 francis Exp $';
 
 use strict;
 
@@ -18,6 +18,7 @@ use HTML::Entities qw(encode_entities);
 use IO::Pipe;
 use HTML::Entities;
 use Net::DNS;
+use FindBin;
 
 use Hassle;
 use mySociety::Config;
