@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w -I../perllib
+#!/usr/bin/perl -w -I../perllib -I../../perllib
 #
 # hassleme.cgi:
 # Website for hassleme.
@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.2 2008-09-03 16:22:49 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.3 2008-09-03 16:27:16 francis Exp $';
 
 use strict;
 
