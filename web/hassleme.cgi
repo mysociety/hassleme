@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.5 2008-09-03 16:59:08 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.6 2008-09-09 16:23:03 root Exp $';
 
 use strict;
 
@@ -47,6 +47,15 @@ sub hassle_header {
 #                       -script=>{-language=>'JAVASCRIPT',
 #                                 -src=>'yellowFade.js'}
                        );
+
+    my $staging = mySociety::Config::get('HM_STAGING') ? 1 : 0;
+    if ($staging) {
+        print $q->div( { style=>'background-color: red; text-align: center; padding: 1em; color: white;' },
+            "This is a test site for developers only, you want",
+            $q->a({href=>'http://www.hassleme.co.uk'}, "www.hassleme.co.uk")
+        );
+    }
+    
     print $q->h1($q->a({href=>'/'},"HassleMe"),
 #                 $q->span({-id=>'betaTest'},
 #                        'Beta Test'),
