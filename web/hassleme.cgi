@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.11 2008-09-09 18:00:51 root Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.12 2008-09-09 18:08:30 root Exp $';
 
 use strict;
 
@@ -153,6 +153,7 @@ sub hassle_recent {
 -->
 </div>
 
+<!--
 <div id="news">
 <h2>Upcoming Features</h2>
 <ul>
@@ -162,6 +163,7 @@ sub hassle_recent {
 <li>Other cool stuff!</li>
 </ul>
 </div>
+-->
 
 EOF
 
