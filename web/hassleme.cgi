@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.9 2008-09-09 17:53:17 root Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.10 2008-09-09 17:58:29 root Exp $';
 
 use strict;
 
@@ -433,7 +433,7 @@ EOF
     } elsif ($fn eq 'hassles') {
         hassle_header($q,'Public hassles');
         print "<p>Some hassles their creators wanted to share, selected at random.</p>";
-        my $sth = dbh()->prepare("select what, frequency, whencreated from hassle where public order by random() limit 100");
+        my $sth = dbh()->prepare("select what, frequency, whencreated from hassle, recipient where recipient.hassle_id = hassle.id and public and confirmed order by random() limit 100");
         $sth->execute;
         print '<table border="0" width="100%"><tr><td>';
         my $odd = 0;
