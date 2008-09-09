@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.10 2008-09-09 17:58:29 root Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.11 2008-09-09 18:00:51 root Exp $';
 
 use strict;
 
@@ -435,13 +435,13 @@ EOF
         print "<p>Some hassles their creators wanted to share, selected at random.</p>";
         my $sth = dbh()->prepare("select what, frequency, whencreated from hassle, recipient where recipient.hassle_id = hassle.id and public and confirmed order by random() limit 100");
         $sth->execute;
-        print '<table border="0" width="100%"><tr><td>';
+        print '<table border="0" width="100%"><tr><td width="50%">';
         my $odd = 0;
         while (my @row = $sth->fetchrow_array) {
             my ($what, $frequency, $whencreated) = @row;
             print "<b>" . $what . "</b> roughly every " . $frequency . " " . ($frequency > 1 ? "days" : "day");
-            print "</td></tr><tr><td>" if ($odd);
-            print "</td><td>" if (!$odd);
+            print "</td></tr><tr><td width=\"50%\">" if ($odd);
+            print "</td><td width=\"50%\">" if (!$odd);
             print "\n";
             $odd = 1 - $odd;
         }
