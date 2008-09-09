@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.6 2008-09-09 16:23:03 root Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.7 2008-09-09 16:59:20 root Exp $';
 
 use strict;
 
@@ -55,7 +55,7 @@ sub hassle_header {
             $q->a({href=>'http://www.hassleme.co.uk'}, "www.hassleme.co.uk")
         );
     }
-    
+   
     print $q->h1($q->a({href=>'/'},"HassleMe"),
 #                 $q->span({-id=>'betaTest'},
 #                        'Beta Test'),
@@ -139,7 +139,7 @@ sub hassle_recent {
 <li><b>Write an entry in my diary</b> roughly every 3 days</li>
 <li><b>Call your mother</b> roughly every 7 days</li>
 <li><b>Go to the theatre</b> roughly every 21 days</li>
-<li><b>Spend 5 hours doing something for <a href="http://www.mysociety.org/volunteertasks">mySociety</a></b> roughly every 28 days</li>
+<li><b>Spend 5 hours doing something for <a href="http://www.mysociety.org/helpus/">mySociety</a></b> roughly every 28 days</li>
 <li><b>Practice the piano</b> roughly every 3 days</li>
 <li><b>Go for a walk in the park</b> roughly every 10 days</li>
 </ul>
@@ -169,7 +169,7 @@ EOF
 
 sub hassle_footer {
     my ($q) = @_;
-    print <<EOF,
+    print <<EOF;
 
 </div></div>
 
@@ -184,7 +184,28 @@ Hosted and supported by
 </p>
 
 EOF
-        $q->end_html();
+
+    if ($ENV{'SERVER_NAME'} eq 'www.hassleme.co.uk') {
+        print <<EOF;
+            <!-- Piwik -->
+            <script type="text/javascript">
+            var pkBaseURL = (("https:" == document.location.protocol) ? "https://piwik.mysociety.org/" : "http://piwik.mysociety.org/");
+            document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <script type="text/javascript">
+            <!--
+            piwik_action_name = '';
+            piwik_idsite = 10;
+            piwik_url = pkBaseURL + "piwik.php";
+            piwik_log(piwik_action_name, piwik_idsite, piwik_url);
+            //-->
+            </script>
+            <noscript><img src="http://piwik.mysociety.org/piwik.php?i=1" style="border:0" alt=""></noscript>
+            <!-- /Piwik -->
+EOF
+    }
+
+    print $q->end_html();
 }
 
 my $foad = 0;
@@ -375,7 +396,7 @@ the UK) or <a href="http://PledgeBank.com">PledgeBank.com</a> (if you are anywhe
 the UK?) They're what <a href="http://www.mysociety.org/">mySociety</a> is really all about &mdash; have a go now!
 </p><p>
 We're always seeking volunteers to help build and publicise sites like
-these &mdash; <a href="http://www.mysociety.org/volunteertasks.cgi">why not get involved</a>?
+these &mdash; <a href="http://www.mysociety.org/helpus">why not get involved</a>?
 </p>
 </div>
 EOF
