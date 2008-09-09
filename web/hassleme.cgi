@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.8 2008-09-09 17:29:54 root Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.9 2008-09-09 17:53:17 root Exp $';
 
 use strict;
 
@@ -214,7 +214,7 @@ while (!$foad && (my $q = new CGI::Fast())) {
 #    $q->autoEscape(0);
     my $fn = lc($q->param('fn'));
     $fn ||= 'home';
-    my %fns = map { $_ => 1 } qw(home confirm unsubscribe faq);
+    my %fns = map { $_ => 1 } qw(home confirm unsubscribe faq hassles);
     $fn = 'home' if (!exists($fns{$fn}));
 
     my $created = undef;
@@ -430,6 +430,23 @@ EOF
                 );
         }
         hassle_form($q);
+    } elsif ($fn eq 'hassles') {
+        hassle_header($q,'Public hassles');
+        print "<p>Some hassles their creators wanted to share, selected at random.</p>";
+        my $sth = dbh()->prepare("select what, frequency, whencreated from hassle where public order by random() limit 100");
+        $sth->execute;
+        print '<table border="0" width="100%"><tr><td>';
+        my $odd = 0;
+        while (my @row = $sth->fetchrow_array) {
+            my ($what, $frequency, $whencreated) = @row;
+            print "<b>" . $what . "</b> roughly every " . $frequency . " " . ($frequency > 1 ? "days" : "day");
+            print "</td></tr><tr><td>" if ($odd);
+            print "</td><td>" if (!$odd);
+            print "\n";
+            $odd = 1 - $odd;
+        }
+        print '</td></tr></table>';
+        print '<p><a href="/hassles">Reload the page</a> for more hassles.</p>';
     } elsif ($fn eq 'faq') {
                 hassle_header($q,'Frequently Asked Questions');
                 print <<EOF;
