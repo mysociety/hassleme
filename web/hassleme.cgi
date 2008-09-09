@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.7 2008-09-09 16:59:20 root Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.8 2008-09-09 17:29:54 root Exp $';
 
 use strict;
 
@@ -94,7 +94,7 @@ sub hassle_form {
               $q->hidden(-name => 'f'),
               $q->h2('Set up a hassle now!'),
               $q->p(
-                    'Hassle me roughly every ',
+                    'Hassle me <b>roughly</b> every ',
                     $q->textfield(-name => 'freq', -size => 3),
 #                    $q->popup_menu(-name => 'units',
 #                                   -values => ['days','hours','minutes']),
@@ -350,7 +350,7 @@ EOF
                                           ? 'a confirmation email'
                                           : 'confirmation emails');
 
-                hassle_header($q,'Thanks!');
+                hassle_header($q,'Now check your email!');
                 print $q->div({-id=>'message'},
                             $q->ul(
                                    $q->li("We've sent $singular_or_plural to <em>$printable_emails</em>; you'll need to click on the link in the email before we can hassle you."),
@@ -387,26 +387,31 @@ EOF
             dbh()->commit();
             hassle_header($q,'Confirmed!');
             print <<EOF;
-<div id="message">
+<div id="message" style="text-align: center">
 <p>
-<b>Thanks &mdash; prepare to be hassled!</b>
-</p><p>
-Have you heard about our sister sites <a href="http://HearFromYourMP.com">HearFromYourMP.com</a> (if you are in
-the UK) or <a href="http://PledgeBank.com">PledgeBank.com</a> (if you are anywhere in the world, including
-the UK?) They're what <a href="http://www.mysociety.org/">mySociety</a> is really all about &mdash; have a go now!
-</p><p>
-We're always seeking volunteers to help build and publicise sites like
-these &mdash; <a href="http://www.mysociety.org/helpus">why not get involved</a>?
+Well done - we'll now hassle you as per your request.
+</p>
+<p>
+If you like this service, <a href="http://www.mysociety.org/donate/">please donate</a>!
+</p>
+<p><a href="http://www.mysociety.org/donate/"><img src="/waving.jpg" alt=""></a></p>
+<p>
+We're a registered non-profit running in the UK, and we need your help
+to run services like this. For more info see 
+<a href="http://www.mysociety.org">http://www.mysociety.org</a>.
 </p>
 </div>
+<p>
+<a href="/">Set up another hassle</a>
+</p>
 EOF
         } else {
                 hassle_header($q,'Oops!');
                 print $q->p({-id=>'errors'},
                             "Sorry. We couldn't understand the link you've followed."
                             );
-            }
-        hassle_form($q);
+                hassle_form($q);
+        }
     } elsif ($fn eq 'unsubscribe') {
         my $token = $q->param('token');
         my $id = check_token($token);
