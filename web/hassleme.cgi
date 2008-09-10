@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.16 2008-09-10 11:06:46 root Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.17 2008-09-10 13:28:49 root Exp $';
 
 use strict;
 
@@ -378,7 +378,11 @@ EOF
             hassle_intro();
         }
 
-        hassle_form($q);
+        if ($created) {
+            print '<p><a href="/">Set up another hassle</a>.</p>';
+        } else {
+            hassle_form($q);
+        }
 
     } elsif ($fn eq 'confirm') {
         my $token = $q->param('token');
