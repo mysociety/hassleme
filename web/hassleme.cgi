@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.13 2008-09-10 08:24:59 dademcron Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.14 2008-09-10 10:49:28 root Exp $';
 
 use strict;
 
@@ -389,7 +389,7 @@ EOF
             dbh()->commit();
             hassle_header($q,'Confirmed!');
             print <<EOF;
-<div id="message" style="text-align: center">
+<div id="donatemessage">
 <p>
 Well done - we'll now hassle you as per your request.
 </p>
@@ -422,8 +422,15 @@ EOF
                         {}, $id);
             dbh()->commit();
             hassle_header($q,'Stopped!');
-            print $q->p({-id=>'message'},
-                    "Thanks! We'll stop hassling you about that, starting now."
+            print $q->div({-id=>'donatemessage'},
+                    <<EOF
+                    <p>Thanks! We'll stop hassling you about that, starting now.</p>
+
+                    <p>If HassleMe has been useful to you, please donate to the non-profit
+                    which runs it.</p>
+
+                    <p><a href="http://www.mysociety.org/donate">Donate</a>.</p>
+EOF
                 );
         } else {
             hassle_header($q,'Oops!');

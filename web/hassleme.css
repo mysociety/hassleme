@@ -5,7 +5,7 @@
  * Copyright (c) 2005 UK Citizens Online Democracy. All rights reserved.
  * Email: etienne@mysociety.org. WWW: http://www.mysociety.org
  *
- * $Id: hassleme.css,v 1.1 2008-09-03 15:36:28 francis Exp $
+ * $Id: hassleme.css,v 1.2 2008-09-10 10:49:28 root Exp $
  *
  */
 
@@ -81,11 +81,14 @@ h2 {
     margin: 0.5em auto 0.5em;
 }
 
-#intro, #message {
+#intro, #message, #donatemessage {
     padding: 0em 1em 0em 1em;
     border: solid 2px #6699ff;
     margin-bottom: 1em;
     background-color: #ffff99;
+}
+#donatemessage {
+    text-align: center;
 }
 
 #createHassleBox, #exampleHasslesBox, #news {
