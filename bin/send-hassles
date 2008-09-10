@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.5 2008-09-03 16:46:35 francis Exp $';
+my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.6 2008-09-10 10:43:20 root Exp $';
 
 use strict;
 
@@ -82,6 +82,17 @@ Hi,
 This is a hassle to remind you to $what. So get to it!
 
  - - - - - - - 
+
+If HassleMe helps you live a slightly happier life, *please donate* to
+show your appreciation.
+
+http://www.mysociety.org/donate
+
+HassleMe is run by a small non-profit called mySociety.org - check us
+out if you want to know more.
+
+ - - - - - - - 
+
 EOF
 
     my $howoften = ($freq == 1
@@ -100,17 +111,7 @@ EOF
 
     $text .= <<EOF;
 
-If you don't want to be hassled about this anymore, please click this
-link:
-
-    $cancelurl
-
-Note: If you asked us to hassle you about other things, only this
-particular hassle will be cancelled.
-
-Thanks,
-
--- The HassleMe Team
+Unsubscribe:  $cancelurl
 
 EOF
 
