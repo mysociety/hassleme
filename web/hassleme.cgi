@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.12 2008-09-09 18:08:30 root Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.13 2008-09-10 08:24:59 dademcron Exp $';
 
 use strict;
 
@@ -178,9 +178,9 @@ sub hassle_footer {
 <p id="footer">
 <a href="http://digg.com/software/HassleMe_nags_you_because_your_mother_can_t_do_everything">Digg this!</a> |
 <a href="/faq">FAQ</a> |
-Derived from <a href="http://www.mysociety.org/?p=16">Hasslebot</a>, a
+Derived from <a href="http://www.mysociety.org/2005/03/17/the-management-power-of-evil/">Hasslebot</a>, a
 <a href="http://www.mysociety.org/">mySociety</a> tool that reminds us to post
-things on our <a href="http://www.mysociety.org/?cat=2">blog</a><br />
+things on our <a href="http://www.mysociety.org/blog/">blog</a><br>
 Hosted and supported by
 <a href="http://www.mythic-beasts.com/">Mythic Beasts Ltd</a>
 </p>
