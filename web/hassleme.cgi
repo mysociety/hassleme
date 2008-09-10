@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.15 2008-09-10 11:01:38 root Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.16 2008-09-10 11:06:46 root Exp $';
 
 use strict;
 
@@ -476,9 +476,10 @@ EOF
         $sth->execute;
         print '<table border="0" width="100%"><tr><td width="50%">';
         my $odd = 0;
+        my $x = "<b>foo</b>";
         while (my @row = $sth->fetchrow_array) {
             my ($what, $frequency, $whencreated) = @row;
-            print "<b>" . $what . "</b> roughly every " . $frequency . " " . ($frequency > 1 ? "days" : "day");
+            print "<b>" . CGI::escapeHTML($what) . "</b> roughly every " . $frequency . " " . ($frequency > 1 ? "days" : "day");
             print "</td></tr><tr><td width=\"50%\">" if ($odd);
             print "</td><td width=\"50%\">" if (!$odd);
             print "\n";
