@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.14 2008-09-10 10:49:28 root Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.15 2008-09-10 11:01:38 root Exp $';
 
 use strict;
 
@@ -114,7 +114,7 @@ sub hassle_form {
                     $q->li("If you add more than one email address (separated by commas or semicolons) we'll pick one person at random for each hassle &mdash; good for offices!"),
                     ),
               $q->p(
-                    'Can we make the text of this hassle publicly visible?',
+                    'Can we make the text of this hassle <a href="/hassles">publicly visible</a>?',
                     $q->br(),
                     $q->radio_group(-name=>'public',
                                     -values=>['true','false'],
@@ -440,9 +440,39 @@ EOF
         }
         hassle_form($q);
     } elsif ($fn eq 'hassles') {
-        hassle_header($q,'Public hassles');
-        print "<p>Some hassles their creators wanted to share, selected at random.</p>";
-        my $sth = dbh()->prepare("select what, frequency, whencreated from hassle, recipient where recipient.hassle_id = hassle.id and public and confirmed order by random() limit 100");
+        my $longest = $q->param('longest') ? 1 : 0;
+
+        if ($longest) {
+            hassle_header($q, 'Longest hassles');
+        } else {
+            hassle_header($q,'Publicly visible hassles');
+        }
+
+        if ($longest) {
+            print <<EOF;
+            <div id="message">
+                <p>Below are 100 things which users of HassleMe have asked to be unpredictably
+                reminded of. You may like to see instead <a href="/hassles">100 random hassles</a>.
+                <p><a href="/">Set up your own hassle!</a></p>
+            </div>
+EOF
+            } else {
+            print <<EOF;
+            <div id="message">
+                <p>Below are 100 things which users of HassleMe have asked to be unpredictably
+                reminded of. <a href="/hassles">Reload the page</a> for another 100.
+                <strong>Warning!</strong> There may be strong language within hassles, that's just the way people are. Don't read them if that bothers you.</p>
+                <p><a href="/">Set up your own hassle!</a></p>
+            </div>
+EOF
+        }
+        my $sth;
+        if ($longest) {
+            $sth = dbh()->prepare("select what, frequency, whencreated from hassle, recipient where recipient.hassle_id = hassle.id and public and confirmed order by frequency desc limit 100");
+        } else {
+            $sth = dbh()->prepare("select what, frequency, whencreated from hassle, recipient where recipient.hassle_id = hassle.id and public and confirmed order by random() limit 100");
+        }
+
         $sth->execute;
         print '<table border="0" width="100%"><tr><td width="50%">';
         my $odd = 0;
@@ -455,7 +485,23 @@ EOF
             $odd = 1 - $odd;
         }
         print '</td></tr></table>';
-        print '<p><a href="/hassles">Reload the page</a> for more hassles.</p>';
+        if ($longest) {
+            print <<EOF;
+            <div id="message">
+                <p>You may like to see <a href="/hassles">100 random hassles</a>.
+                <p><a href="/">Set up your own hassle!</a></p>
+            </div>
+EOF
+        } else {
+        print <<EOF;
+            <div id="message">
+                <p><a href="/hassles">Reload the page</a> for another 100, or
+                see the <a href="/hassles/longest">longest hassles</a>.
+                </p>
+                <p><a href="/">Set up your own hassle!</a></p>
+            </div>
+EOF
+        }
     } elsif ($fn eq 'faq') {
                 hassle_header($q,'Frequently Asked Questions');
                 print <<EOF;
