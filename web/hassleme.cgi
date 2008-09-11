@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.17 2008-09-10 13:28:49 root Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.18 2008-09-11 19:50:30 matthew Exp $';
 
 use strict;
 
@@ -60,7 +60,7 @@ sub hassle_header {
 #                 $q->span({-id=>'betaTest'},
 #                        'Beta Test'),
                  $q->span({-id=>'slogan'},
-                          _("Because sometimes in life,<br/>you just need to be nagged...")),
+                          _("Because sometimes in life,<br>you just need to be nagged...")),
                  );
     print _('<div id="w"><div id="content">');
     if ($title) {
@@ -71,9 +71,11 @@ sub hassle_header {
 sub hassle_intro {
     print <<EOF;
 <div id="intro">
-<p>Not eating enough fruit? Forgot to feed the fish again? Need a little help keeping your New Year's resolutions?
-<br/>
-<b>Tell us what to hassle you about, and we'll nag you via email at semi-unpredictable intervals.</b></p>
+<p><strong>Not eating enough fruit?</strong> Forgot to feed the fish again?
+Need a little help keeping your New Year's resolutions? <br>Tell us what to
+hassle you about, and we'll nag you via email at <strong>semi-unpredictable intervals</strong>.
+<br>HassleMe is unique because you <strong>never quite know</strong> when your
+reminder will come along.</p>
 </div>
 EOF
 }
@@ -133,7 +135,7 @@ sub hassle_recent {
 
         print <<EOF;
 <div id="exampleHasslesBox">
-<h2>Popular Hassles</h2>
+<h2>Example Hassles</h2>
 <ul>
 <li><b>Go to the gym</b> roughly every 4 days</li>
 <li><b>Write an entry in my diary</b> roughly every 3 days</li>
@@ -143,6 +145,7 @@ sub hassle_recent {
 <li><b>Practice the piano</b> roughly every 3 days</li>
 <li><b>Go for a walk in the park</b> roughly every 10 days</li>
 </ul>
+<p align="right"><a href="/hassles">Read lots of hassles</a></p>
 <!--
 <h2>Recently on HassleMe</h2>
 <ul>People asked to be sent these hassles:
