@@ -7,12 +7,12 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.18 2008-09-11 19:50:30 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.19 2008-10-13 13:38:22 matthew Exp $';
 
 use strict;
 
 use CGI qw(-no_xhtml);
-use CGI::Fast;
+use mySociety::CGIFast;
 use Data::Dumper;
 use HTML::Entities qw(encode_entities);
 use IO::Pipe;
@@ -213,9 +213,7 @@ EOF
     print $q->end_html();
 }
 
-my $foad = 0;
-$SIG{TERM} = sub { $foad = 1; };
-while (!$foad && (my $q = new CGI::Fast())) {
+while (my $q = new mySociety::CGIFast()) {
 #    $q->autoEscape(0);
     my $fn = lc($q->param('fn'));
     $fn ||= 'home';
