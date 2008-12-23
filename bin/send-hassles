@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.6 2008-09-10 10:43:20 root Exp $';
+my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.7 2008-12-23 12:15:18 matthew Exp $';
 
 use strict;
 
@@ -71,6 +71,7 @@ while (my ($hassle_id, $what, $freq, $when, $count) = $s->fetchrow_array()) {
                     order by random()
                     limit 1', {},
                     $hassle_id);
+    next unless $id;
 
     debug "  victim = #$id $email\n";
 
