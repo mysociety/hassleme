@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.19 2008-10-13 13:38:22 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.20 2009-02-02 01:01:09 root Exp $';
 
 use strict;
 
@@ -540,6 +540,11 @@ developers and volunteers at mySociety to post frequently to our blog, letting
 people know what mySociety was up to. Despite the fact that it shouldn't work,
 it did.</dd>
 
+<dt>How do I cancel a hassle?</dt>
+
+<dd>Everytime we hassle you there will be a link that you can
+click to cancel it.</dd>
+
 <dt>If I give you my email address, will you send me spam?<dt>
 
 <dd><b>No!</b> We will only ever send you email when someone
@@ -555,7 +560,7 @@ anyone, and we won't send you spam &mdash; ever.</dd>
 href="http://www.ex-parrot.com/~chris/">Chris Lightfoot</a> and <a
 href="http://ejhp.net/">Etienne Pollard</a> in two afternoons before
 and after Christmas 2005 as a mySociety 'back of the envelope'
-project. Chris is a full-time employee of mySociety and spends his
+project. Chris was a full-time employee of mySociety and spent his
 days running much more serious sites like <a
 href="http://www.writetothem.com/">WriteToThem.com</a>. <a
 href="http://www.mysociety.org/">mySociety</a> is a charitable
