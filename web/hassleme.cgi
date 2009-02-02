@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.20 2009-02-02 01:01:09 root Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.21 2009-02-02 02:49:37 root Exp $';
 
 use strict;
 
@@ -542,7 +542,7 @@ it did.</dd>
 
 <dt>How do I cancel a hassle?</dt>
 
-<dd>Everytime we hassle you there will be a link that you can
+<dd>Every time we hassle you there will be a link that you can
 click to cancel it.</dd>
 
 <dt>If I give you my email address, will you send me spam?<dt>
