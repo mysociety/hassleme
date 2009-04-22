@@ -5,7 +5,7 @@
 -- Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 -- Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 --
--- $Id: schema.sql,v 1.1 2008-09-03 15:36:27 francis Exp $
+-- $Id: schema.sql,v 1.2 2009-04-22 15:46:38 louise Exp $
 --
 
 create table secret (
@@ -26,7 +26,8 @@ create table recipient (
     id serial not null primary key,
     hassle_id integer not null references hassle(id),
     email text not null,
-    confirmed boolean not null default(false)
+    confirmed boolean not null default(false),
+    deleted boolean not null default(false)
 );
 
 create table hassle_sent (
