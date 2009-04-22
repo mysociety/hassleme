@@ -6,7 +6,7 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-# $Id: Hassle.pm,v 1.3 2009-04-22 16:22:49 louise Exp $
+# $Id: Hassle.pm,v 1.4 2009-04-22 16:28:18 louise Exp $
 #
 
 package Hassle;
@@ -150,7 +150,7 @@ Mark any recipient records relating to EMAIL address as deleted
 sub delete_recipient ($){
     my $email = shift;
     return undef if (!$email);
-    dbh()->do('update recipient set deleted=1 where email = ?',
+    dbh()->do('update recipient set deleted=true where email = ?',
                 {}, $email);
     dbh()->commit();
 }

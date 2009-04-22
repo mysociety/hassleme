@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.7 2008-12-23 12:15:18 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.8 2009-04-22 16:28:18 louise Exp $';
 
 use strict;
 
@@ -43,7 +43,8 @@ my $s = dbh()->prepare('
                     count(recipient)
                 from hassle, recipient
                 where hassle.id = recipient.hassle_id
-                    and recipient.confirmed 
+                    and recipient.confirmed
+                    and not recipient.deleted 
                 group by hassle.id, hassle.what, hassle.frequency,
                     hassle.whencreated
                 having count(recipient) > 0');
@@ -67,7 +68,7 @@ while (my ($hassle_id, $what, $freq, $when, $count) = $s->fetchrow_array()) {
     # Pick a victim.
     my ($id, $email) = dbh()->selectrow_array('
                     select id, email from recipient
-                    where confirmed and hassle_id = ?
+                    where confirmed and not deleted and hassle_id = ?
                     order by random()
                     limit 1', {},
                     $hassle_id);
