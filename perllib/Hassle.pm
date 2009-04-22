@@ -6,7 +6,7 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-# $Id: Hassle.pm,v 1.2 2008-09-03 16:22:49 francis Exp $
+# $Id: Hassle.pm,v 1.3 2009-04-22 16:22:49 louise Exp $
 #
 
 package Hassle;
@@ -140,6 +140,19 @@ sub check_token ($) {
     my ($i, $salt, $hash) = split(/[,X]/, $token);
     return undef if ($hash ne substr(sha1_hex(secret() . ",$i,$salt"), 0, 12));
     return $i;
+}
+
+=item delete_recipient EMAIL
+
+Mark any recipient records relating to EMAIL address as deleted
+
+=cut
+sub delete_recipient ($){
+    my $email = shift;
+    return undef if (!$email);
+    dbh()->do('update recipient set deleted=1 where email = ?',
+                {}, $email);
+    dbh()->commit();
 }
 
 =item is_valid_email EMAIL
