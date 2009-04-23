@@ -1,0 +1,86 @@
+#!/usr/bin/perl -w -I../../perllib
+#
+# test-run:
+# Test harness for Hassleme
+# 
+# Requires:
+# * ../general/conf file set up for HassleMe and matching the below requirements
+# * a database with name ending "_testharness"; this script will drop and remake the
+#   database, so make sure it is never used for anything important
+# * email addresses (email_n below) configured to pipe to ./test-mailin with fast
+#   local delivery, and
+# Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
+# Email: louise@mysociety.org; WWW: http://www.mysociety.org/
+
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.1 2009-04-23 16:46:06 louise Exp $';
+
+use strict;
+require 5.8.0;
+
+use Getopt::Long;
+
+
+use mySociety::Config;
+mySociety::Config::set_file('../conf/general');
+use mySociety::DBHandle qw(dbh);
+use mySociety::WebTestHarness;
+
+sub help {
+print <<END
+
+Usage: test-run [OPTION]
+
+Options are
+    --verbose=n   Choose 0 (no progress), 1 (basic actions), 2 (full debug)
+
+END
+}
+# Parse command line
+our $verbose = 0; # currently 3 levels: 0, 1 and 2
+our $help;
+our $multispawn = 1;
+
+if (!GetOptions(
+        'verbose=i' =>  \$verbose,
+        'help' =>               \$help,
+        'multispawn=i' => \$multispawn,
+    )) {
+    help();
+    exit(1);
+}
+if ($help) {
+    help();
+    exit(0);
+}
+
+# Configure test harness class
+print "Set up web test harness...\n" if $verbose > 0;
+our $wth = new mySociety::WebTestHarness();
+our $base_url = mySociety::Config::get('WEBURL');
+our $email_domain = mySociety::Config::get('EMAIL_DOMAIN');
+
+$wth->database_connect('HM_');
+$wth->database_drop_reload('../db/schema.sql');
+$wth->database_cycle_sequences(200);
+
+# Test the process of signing up for a hassle
+do_basic_signup_test();
+print "Everything completed successfully\n" if $verbose > 0;
+#----------------------------------
+sub email_n { my $n = shift; return "hm-testharness+$n\@$email_domain"; }
+#----------------------------------
+sub do_basic_signup_test(){
+    
+    $wth->browser_get($base_url);
+    $wth->browser_check_contents("Set up a hassle now!");
+    $wth->browser_check_contents("This is a test site");
+   
+    $wth->browser_submit_form(form_name => 'createHassleForm',
+        fields => { freq => "1", 
+                    what => "run the test suite for Hassleme",
+                    email => email_n(0), 
+                    public => "1"},  
+        );
+    $wth->browser_check_contents("Now check your email!");
+}
+#----------------------------------
