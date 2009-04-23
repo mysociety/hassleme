@@ -8,20 +8,23 @@
 # * a database with name ending "_testharness"; this script will drop and remake the
 #   database, so make sure it is never used for anything important
 # * email addresses (email_n below) configured to pipe to ./test-mailin with fast
-#   local delivery, and
+#   local delivery.
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.1 2009-04-23 16:46:06 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.2 2009-04-23 17:37:41 louise Exp $';
 
 use strict;
 require 5.8.0;
 
 use Getopt::Long;
+use FindBin;
+use Carp qw(verbose);
 
-
-use mySociety::Config;
-mySociety::Config::set_file('../conf/general');
+BEGIN {
+    use mySociety::Config;
+    mySociety::Config::set_file('../conf/general');
+}
 use mySociety::DBHandle qw(dbh);
 use mySociety::WebTestHarness;
 
@@ -52,7 +55,7 @@ if ($help) {
     help();
     exit(0);
 }
-
+#----------------------------------
 # Configure test harness class
 print "Set up web test harness...\n" if $verbose > 0;
 our $wth = new mySociety::WebTestHarness();
@@ -63,9 +66,7 @@ $wth->database_connect('HM_');
 $wth->database_drop_reload('../db/schema.sql');
 $wth->database_cycle_sequences(200);
 
-# Test the process of signing up for a hassle
-do_basic_signup_test();
-print "Everything completed successfully\n" if $verbose > 0;
+# Test the process of signing up
 #----------------------------------
 sub email_n { my $n = shift; return "hm-testharness+$n\@$email_domain"; }
 #----------------------------------
@@ -79,8 +80,12 @@ sub do_basic_signup_test(){
         fields => { freq => "1", 
                     what => "run the test suite for Hassleme",
                     email => email_n(0), 
-                    public => "1"},  
+                    public => "true"},  
         );
     $wth->browser_check_contents("Now check your email!");
 }
 #----------------------------------
+
+# Test the process of signing up for a hassle
+do_basic_signup_test();
+print "Everything completed successfully\n" if $verbose > 0;
