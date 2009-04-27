@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.4 2009-04-27 12:38:49 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.5 2009-04-27 13:38:07 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -71,6 +71,7 @@ $wth->email_setup({ eveld_bin => undef,
 #----------------------------------
 sub email_n { my $n = shift; return "hm-testharness+$n\@$email_domain"; }
 #----------------------------------
+#----------------------------------
 sub do_basic_signup_test(){
     
     $wth->browser_get($base_url);
@@ -85,8 +86,10 @@ sub do_basic_signup_test(){
         );
     $wth->browser_check_contents("Now check your email!");
     
+    # Hassle recipient is not confirmed - no hassles should be sent
+
     # Confirm email
-    my $confirmation_email = $wth->email_get_containing('%To: "' . email_n(0) . '%');
+    my $confirmation_email = $wth->email_get_containing('%To: ' . email_n(0) . '%');
     die "HassleMe confirmation link not found\n" if ($confirmation_email !~ m#^\s+(http://.*$)#m);
     my $confirmation_url = $1;
     $wth->email_check_url($confirmation_url);
@@ -98,6 +101,7 @@ sub do_basic_signup_test(){
 #----------------------------------
 
 # Test the process of signing up for a hassle
+print "Testing basic signup...\n" if $verbose > 0;
 do_basic_signup_test();
 print "Checking no emails left at end...\n" if $verbose > 0;
 $wth->email_check_none_left();
