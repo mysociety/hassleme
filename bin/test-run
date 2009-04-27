@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.5 2009-04-27 13:38:07 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.6 2009-04-27 13:47:48 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -27,6 +27,7 @@ BEGIN {
 
 use mySociety::DBHandle qw(dbh);
 use mySociety::WebTestHarness;
+use Hassle;
 
 sub help {
 print <<END
@@ -71,7 +72,6 @@ $wth->email_setup({ eveld_bin => undef,
 #----------------------------------
 sub email_n { my $n = shift; return "hm-testharness+$n\@$email_domain"; }
 #----------------------------------
-#----------------------------------
 sub do_basic_signup_test(){
     
     $wth->browser_get($base_url);
@@ -86,7 +86,9 @@ sub do_basic_signup_test(){
         );
     $wth->browser_check_contents("Now check your email!");
     
-    # Hassle recipient is not confirmed - no hassles should be sent
+    # Shouldn't be any active hassles
+    my $s = active_hassles;
+    die 'There are active hassles when there are no confirmed users' if $s->fetchrow_array();
 
     # Confirm email
     my $confirmation_email = $wth->email_get_containing('%To: ' . email_n(0) . '%');

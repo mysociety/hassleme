@@ -6,7 +6,7 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-# $Id: Hassle.pm,v 1.5 2009-04-27 11:16:18 louise Exp $
+# $Id: Hassle.pm,v 1.6 2009-04-27 13:47:48 louise Exp $
 #
 
 package Hassle;
@@ -23,7 +23,7 @@ use mySociety::Config;
 BEGIN {
     use Exporter ();
     @Hassle::ISA = qw(Exporter);
-    @Hassle::EXPORT = qw(&dbh &secret &sendmail &token &check_token &is_valid_email);
+    @Hassle::EXPORT = qw(&dbh &secret &sendmail &token &check_token &is_valid_email &active_hassles);
 }
 #our @EXPORT_OK;
 
@@ -153,6 +153,28 @@ sub delete_recipient ($){
     dbh()->do('update recipient set deleted=true where email = ?',
                 {}, $email);
     dbh()->commit();
+}
+
+=item active_hassles
+
+Return a statement handle containing all the currently active hassles
+
+=cut
+
+sub active_hassles(){
+    my $s = dbh()->prepare('
+                    select hassle.id, what, frequency, whencreated,
+                        count(recipient)
+                    from hassle, recipient
+                    where hassle.id = recipient.hassle_id
+                        and recipient.confirmed
+                        and not recipient.deleted 
+                    group by hassle.id, hassle.what, hassle.frequency,
+                        hassle.whencreated
+                    having count(recipient) > 0');
+
+    $s->execute();
+    return $s;
 }
 
 =item is_valid_email EMAIL
