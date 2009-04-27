@@ -1,0 +1,124 @@
+#!/usr/bin/perl -w
+#
+# handlemail:
+# Handle an individual incoming mail message.
+#
+# This script should be invoked through the .forward mechanism. It processes
+# replies to hassleme emails. 
+#
+# Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
+# Email: louise@mysociety.org; WWW: http://www.mysociety.org/
+
+my $rcsid = ''; $rcsid .= '$Id: handlemail,v 1.1 2009-04-27 18:24:02 louise Exp $';
+
+use strict;
+require 5.8.0;
+
+# Horrible boilerplate to set up appropriate library paths.
+use FindBin;
+use Email::LocalDelivery;
+use lib "$FindBin::Bin/../perllib";
+use lib "$FindBin::Bin/../../perllib";
+use mySociety::Config;
+use Hassle;
+
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../conf/general");
+}
+use mySociety::HandleMail;
+
+# Don't print diagnostics to standard error, as this can result in bounce
+# messages being generated (only in response to non-bounce input, obviously).
+mySociety::SystemMisc::log_to_stderr(0);
+
+use constant MAIL_LOG_PREFIX => mySociety::Config::get('HM_MAIL_LOG_PREFIX'); 
+
+#----------------------
+sub mark_as($%){
+    my ($destination, $data) = @_;
+    my %data = %{$data};
+    my $mail = join("\n", @{$data{lines}});
+    open FILE, ">>", MAIL_LOG_PREFIX . $destination;
+    print FILE $mail;
+    close FILE; 
+}
+#----------------------
+sub handle_dsn_bounce($$){
+
+    my ($r, $data) = @_;
+    my %attributes = %{$r};
+    my $status = $attributes{status};
+    if ($status !~ /^5\./ || $status eq '5.2.2'){
+        mark_as('ignored', $data);
+    }else{
+        if ($attributes{recipient}){
+            delete_recipient($attributes{recipient});
+            mark_as('deleted', $data);
+        }else{
+            mark_as('unparsed', $data);
+        }
+        
+    }
+        
+}
+#----------------------
+sub handle_non_dsn_bounce($$){
+    my ($attributes, $data) = @_;
+    my %attribute_hash = %{$attributes};
+    if (mySociety::HandleMail::is_permanent($attribute_hash{problem})){
+        if ($attribute_hash{email_address}){
+            delete_recipient($attribute_hash{email_address});
+            mark_as('deleted', $data);
+        }else{
+            mark_as('unparsed', $data);
+        }
+    }else{
+        mark_as('ignored', $data);
+    }
+    
+}
+#----------------------
+sub handle_bounce($){
+
+    my ($data) = @_;
+    my %data_hash = %{$data};
+    my @lines = @{$data_hash{lines}};
+
+    my $r = mySociety::HandleMail::parse_dsn_bounce(\@lines);
+    if (!$r){
+       $r = mySociety::HandleMail::parse_ill_formed_dsn_bounce(\@lines);
+    }
+
+    if ($r){
+        handle_dsn_bounce($r, \%data_hash);
+    }else{
+        my %attributes = mySociety::HandleMail::parse_bounce(\@lines);
+        
+        if ($attributes{problem}){
+            handle_non_dsn_bounce(\%attributes, \%data_hash);
+        }else{
+            mark_as('unparsed', \%data_hash);
+        }
+    }
+    
+}
+#----------------------
+sub handle_non_bounce_reply($){
+    my ($data) = @_;
+    mark_as('ignored', $data);
+}
+#----------------------
+
+sub handle_incoming(){
+    my %data = mySociety::HandleMail::get_message();
+
+    if (!$data{is_bounce_message}) {
+        handle_non_bounce_reply(\%data);
+    }else{
+        handle_bounce(\%data);
+    }
+    exit(0);
+   
+}
+#----------------------
+handle_incoming();
