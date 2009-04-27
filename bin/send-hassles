@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.9 2009-04-27 14:18:14 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.10 2009-04-27 14:25:55 louise Exp $';
 
 use strict;
 
@@ -65,18 +65,7 @@ debug "running on " . mySociety::Config::get('NHASSLEDAYS') . " days per week\n"
 debug "running " . mySociety::Config::get('NHASSLERUNS') . " times per day\n";
 
 # Iterate over all hassles.
-my $s = dbh()->prepare('
-                select hassle.id, what, frequency, whencreated,
-                    count(recipient)
-                from hassle, recipient
-                where hassle.id = recipient.hassle_id
-                    and recipient.confirmed
-                    and not recipient.deleted 
-                group by hassle.id, hassle.what, hassle.frequency,
-                    hassle.whencreated
-                having count(recipient) > 0');
-
-$s->execute();
+my $s = active_hassles();
 while (my ($hassle_id, $what, $freq, $when, $count) = $s->fetchrow_array()) {
     debug "hassle #$hassle_id '$what' every $freq days; $count recips\n";
 
