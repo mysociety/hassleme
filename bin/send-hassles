@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.8 2009-04-22 16:28:18 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.9 2009-04-27 14:18:14 louise Exp $';
 
 use strict;
 
@@ -19,6 +19,7 @@ use DBI;
 use DBD::Pg;
 use Digest::SHA1 qw(sha1_hex);
 use IO::Pipe;
+use Getopt::Long;
 
 use Hassle;# qw(dbh secret);
 use mySociety::Config;
@@ -27,8 +28,34 @@ BEGIN {
     mySociety::Config::set_file("$FindBin::Bin/../conf/general");
 }   
 
+our $verbose = 0; 
+our $help;
+
+sub help {
+print <<END
+
+Usage: send-hassles [OPTION]
+
+Options are
+    --verbose=n   Choose 0 (no output), 1 (debugging output)
+
+END
+}
+
+if (!GetOptions(
+        'verbose=i' =>  \$verbose,
+        'help' =>               \$help,
+    )) {
+    help();
+    exit(1);
+}
+if ($help) {
+    help();
+    exit(0);
+}
+
 sub debug (@);
-if (-t STDERR) {
+if ($verbose > 0) {
     eval 'sub debug (@) { print STDERR @_; }';
 } else {
     eval 'sub debug (@) { }';
