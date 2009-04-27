@@ -12,20 +12,23 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.6 2009-04-27 13:47:48 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.7 2009-04-27 14:19:40 louise Exp $';
 
 use strict;
 require 5.8.0;
 
 use Getopt::Long;
 use FindBin;
+
+use lib "$FindBin::Bin/../perllib";
+use lib "$FindBin::Bin/../../perllib";
+
 use Carp qw(verbose);
 BEGIN {
     use mySociety::Config;
     mySociety::Config::set_file('../conf/general');
 }
 
-use mySociety::DBHandle qw(dbh);
 use mySociety::WebTestHarness;
 use Hassle;
 
@@ -74,21 +77,22 @@ sub email_n { my $n = shift; return "hm-testharness+$n\@$email_domain"; }
 #----------------------------------
 sub do_basic_signup_test(){
     
+    my $test_hassle = 'run the test suite for Hassleme';
     $wth->browser_get($base_url);
     $wth->browser_check_contents("Set up a hassle now!");
     $wth->browser_check_contents("This is a test site");
    
     $wth->browser_submit_form(form_name => 'createHassleForm',
         fields => { freq => "1", 
-                    what => "run the test suite for Hassleme",
+                    what => $test_hassle,
                     email => email_n(0), 
                     public => "true"},  
         );
     $wth->browser_check_contents("Now check your email!");
     
-    # Shouldn't be any active hassles
-    my $s = active_hassles;
-    die 'There are active hassles when there are no confirmed users' if $s->fetchrow_array();
+    # Shouldn't be considering sending hassles yet
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;
+    die 'Active hassle for unconfirmed user' if ($hassle_output =~ /$test_hassle/);
 
     # Confirm email
     my $confirmation_email = $wth->email_get_containing('%To: ' . email_n(0) . '%');
@@ -99,6 +103,10 @@ sub do_basic_signup_test(){
     $wth->browser_get($confirmation_url);
     $wth->browser_check_contents("Well done - we'll now hassle you as per your request."); 
     
+    # Hassle should now be in the set considered for emails
+    $hassle_output = `./send-hassles --verbose=1 2>&1`;
+    die 'No active hassle for confirmed user' unless ($hassle_output =~ /$test_hassle/);
+        
 }
 #----------------------------------
 
