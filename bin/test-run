@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.8 2009-04-27 18:15:46 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.9 2009-04-27 18:35:11 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -187,10 +187,10 @@ Message content
 
 --9B095B5ADSN=_01C8F669DA6E489E0002048Dsmtp.yoo.com--    
 ';
-    call_handlemail($message);
+    call_handlemail($bounce_email);
     
     # Hassle should no longer be in the set considered for emails
-    $hassle_output = `./send-hassles --verbose=1 2>&1`;
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;
     die 'Active hassle for deleted user' if ($hassle_output =~ /$bouncing_hassle/);
 }
 #----------------------------------
