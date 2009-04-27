@@ -6,7 +6,7 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-# $Id: Hassle.pm,v 1.4 2009-04-22 16:28:18 louise Exp $
+# $Id: Hassle.pm,v 1.5 2009-04-27 11:16:18 louise Exp $
 #
 
 package Hassle;
@@ -204,7 +204,10 @@ sub is_valid_email ($) {
 #            $R->udp_timeout(3);
                 # XXX old Net::DNS::Resolver on sphinx is TCP only?
         }
-        my $resp = $R->send($domain, qw(IN MX A));
+        my $resp = $R->send($domain, 'MX');
+        if(defined($resp) && $resp->header()->ancount() == 0 ){
+            $resp = $R->send($domain, 'A'); 
+        }
         if (!defined($resp)     # timeout, probably
             || $resp->header()->ancount() > 0) {
             return undef;
