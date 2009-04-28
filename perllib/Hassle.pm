@@ -6,7 +6,7 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-# $Id: Hassle.pm,v 1.9 2009-04-28 15:02:55 louise Exp $
+# $Id: Hassle.pm,v 1.10 2009-04-28 15:09:57 louise Exp $
 #
 
 package Hassle;
@@ -70,7 +70,10 @@ Construct a VERP envelope sender for an email to RECIPIENT
 =cut 
 sub verp_envelope_sender($){
     my ($recipient) = @_;
-    mySociety::HandleMail::verp_envelope_sender($recipient,  mySociety::Config::get('EMAIL_PREFIX'),  mySociety::Config::get('EMAIL_DOMAIN'));
+    my $prefix =  mySociety::Config::get('EMAIL_PREFIX');
+    my $domain =  mySociety::Config::get('EMAIL_DOMAIN');
+    my $envelope_sender = mySociety::HandleMail::verp_envelope_sender($recipient, $prefix, $domain);
+    return $envelope_sender
 }
 
 =item sendmail RECIPIENT SUBJECT TEXT 
