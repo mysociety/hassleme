@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.11 2009-04-28 09:36:07 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.12 2009-04-28 10:37:52 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -119,7 +119,56 @@ sub call_handlemail($) {
     $p2->close(); 
     waitpid($pid, 0);
 }
+#----------------------------------
+sub do_non_bounce_reply_without_verp_test(){
+    
+    my $non_bouncing_hassle = 'get out of the office more';
+    signup_user(email_n(2), $non_bouncing_hassle);
+    my $non_bounce_email = 'From ' . email_n(2) . ' Tue Sep 09 16:25:52 2008
+Return-path: <' . email_n(2) . '>
+Envelope-to: hm-testharness@sandwich.ukcod.org.uk
+Delivery-date: Tue, 09 Sep 2008 16:25:52 +0100
+X-IronPort-AV: E=Sophos;i="4.32,366,1217822400"; 
+   d="scan\'208,217";a="1201752"
+Subject: I am out of the office.
+From: me <' . email_n(2) . '>
+To: HassleMe <hm-testharness@sandwich.ukcod.org.uk>
+Message-ID: <OF367A6E95.C47CFFC5-ON852574BF.0054BE74-852574BF.0054BE74@x>
+Date: Tue, 9 Sep 2008 11:25:37 -0400
+X-MIMETrack: Serialize by Router on DRNotes1/NY/US/KSFHH(Release 7.0.2FP2 HF144|July 27, 2007) at
+ 09/09/2008 11:25:39 AM
+MIME-Version: 1.0
+Content-type: multipart/alternative; 
+	Boundary="0__=0ABBFE2CDFC738E48f9e8a93df938690918c0ABBFE2CDFC738E4"
+Content-Disposition: inline
+Status: O
+Content-Length: 602
+Lines: 18
 
+--0__=0ABBFE2CDFC738E48f9e8a93df938690918c0ABBFE2CDFC738E4
+Content-type: text/plain; charset=US-ASCII
+
+
+I will be out of the office starting  09/08/2008 and will not return until
+09/29/2008.
+
+I will respond to your message when I return.
+--0__=0ABBFE2CDFC738E48f9e8a93df938690918c0ABBFE2CDFC738E4
+Content-type: text/html; charset=US-ASCII
+Content-Disposition: inline
+
+<html><body>
+<p>I will be out of the office starting  09/08/2008 and will not return until 09/29/2008.<br>
+<br>
+I will respond to your message when I return.</body></html>
+--0__=0ABBFE2CDFC738E48f9e8a93df938690918c0ABBFE2CDFC738E4--
+    ';
+    call_handlemail($non_bounce_email);
+
+    # Hassle should still be in the set considered for emails
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;    
+    die 'Inactive hassle for user following non bounce mail' unless ($hassle_output =~ /$non_bouncing_hassle/);
+}
 #----------------------------------
 sub do_permanent_bounce_without_verp_test(){
     
@@ -188,9 +237,9 @@ Message content
 ';
 
     call_handlemail($bounce_email);
+
     # Hassle should no longer be in the set considered for emails
-    my $hassle_output = `./send-hassles --verbose=1 2>&1`;
-    
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;    
     die 'Active hassle for deleted user' if ($hassle_output =~ /$bouncing_hassle/);
 }
 #----------------------------------
@@ -205,9 +254,13 @@ sub do_basic_signup_test(){
 print "Testing basic signup...\n" if $verbose > 0;
 do_basic_signup_test();
 
-# Test the deletion of recipients whose hassles produce permanent bounces
+# Test the deletion of a recipient whose hassles produce permanent bounces
 print "Testing deletion of recipient following permanent bounce...\n" if $verbose > 0;
 do_permanent_bounce_without_verp_test();
+
+# Test the handling of a non-bounce reply to a hassle - should be ignored
+print "Testing non-bounce reply is ignored"; 
+do_non_bounce_reply_without_verp_test();
 
 print "Checking no emails left at end...\n" if $verbose > 0;
 $wth->email_check_none_left();
