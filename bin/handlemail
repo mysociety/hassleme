@@ -9,14 +9,13 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: handlemail,v 1.1 2009-04-27 18:24:02 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: handlemail,v 1.2 2009-04-28 09:23:50 louise Exp $';
 
 use strict;
 require 5.8.0;
 
 # Horrible boilerplate to set up appropriate library paths.
 use FindBin;
-use Email::LocalDelivery;
 use lib "$FindBin::Bin/../perllib";
 use lib "$FindBin::Bin/../../perllib";
 use mySociety::Config;
@@ -111,7 +110,7 @@ sub handle_non_bounce_reply($){
 
 sub handle_incoming(){
     my %data = mySociety::HandleMail::get_message();
-
+    
     if (!$data{is_bounce_message}) {
         handle_non_bounce_reply(\%data);
     }else{
