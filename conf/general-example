@@ -14,7 +14,7 @@
  * Copyright (c) 2008 UK Citizens Online Democracy. All rights reserved.
  * Email: francis@mysociety.org; WWW: http://www.mysociety.org
  *
- * $Id: general-example,v 1.7 2009-04-28 14:24:47 louise Exp $
+ * $Id: general-example,v 1.8 2009-04-28 15:33:16 louise Exp $
  * 
  */
 
@@ -26,16 +26,19 @@ define('OPTION_HM_DB_USER', 'hm');
 define('OPTION_HM_DB_PASS', '');
 define('OPTION_PHP_MAINDB', 'hm');
 
+define('OPTION_SMTP_SMARTHOST', 'localhost');
+
 define('OPTION_NHASSLEDAYS', 7); # per week
 # XXX I think this 5 is the same as the number of times an hour it is run in the crontab?
 define('OPTION_NHASSLERUNS', 5); # per day
 
 define('OPTION_WEBURL', "http://hassleme.co.uk"); 
-define('OPTION_SENDMAIL', "/usr/sbin/sendmail"); 
 
 define('OPTION_HM_STAGING', 1);
 define('OPTION_HM_MAIL_LOG_PREFIX', '/var/mail/hm-');
 define('OPTION_EMAIL_DOMAIN', '---.co.uk');
 define('OPTION_EMAIL_PREFIX', 'hm-staging');
+
+
 
 ?>
