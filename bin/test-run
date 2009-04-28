@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.13 2009-04-28 10:40:24 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.14 2009-04-28 12:19:52 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -118,6 +118,30 @@ sub call_handlemail($) {
     $p2->print($content);
     $p2->close(); 
     waitpid($pid, 0);
+}
+#----------------------------------
+sub check_mail_log($$){
+   
+    my ($mail_log, $expected_contents) = @_;
+    open FILE, "<", mySociety::Config::get('HM_MAIL_LOG_PREFIX') . $mail_log;
+    my @lines = ();
+    my $line;
+    while ($line = <FILE>) {
+        chomp $line;
+        push @lines, $line;
+    }
+    my $found_contents = join("\n", @lines);
+    $expected_contents = join("\n", split("\n", $expected_contents));
+    die 'Expected mail not found in ' . $mail_log if ($expected_contents ne $found_contents);
+}
+#----------------------------------
+sub clear_mail_log($){
+    my ($log) = @_;
+    system("> " . mySociety::Config::get('HM_MAIL_LOG_PREFIX') . $log);
+}
+#----------------------------------
+sub do_transient_bounce_without_verp_test(){
+    
 }
 #----------------------------------
 sub do_non_bounce_reply_without_verp_test(){
@@ -261,6 +285,10 @@ do_permanent_bounce_without_verp_test();
 # Test the handling of a non-bounce reply to a hassle - should be ignored
 print "Testing non-bounce reply is ignored" if $verbose > 0; 
 do_non_bounce_reply_without_verp_test();
+
+# Test the handling of a transient DSN bounce
+print "Testing transient DSN bounce is ignored" if $verbose > 0;
+do_transient_bounce_without_verp_test();
 
 print "Checking no emails left at end...\n" if $verbose > 0;
 $wth->email_check_none_left();
