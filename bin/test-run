@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.14 2009-04-28 12:19:52 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.15 2009-04-28 12:49:32 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -140,16 +140,104 @@ sub clear_mail_log($){
     system("> " . mySociety::Config::get('HM_MAIL_LOG_PREFIX') . $log);
 }
 #----------------------------------
+sub expect_mail_outcome($$){
+    my ($mail_log, $mail) = @_;
+    clear_mail_log($mail_log);
+    call_handlemail($mail);
+    check_mail_log($mail_log, $mail);
+
+}
+#----------------------------------
 sub do_transient_bounce_without_verp_test(){
-    
+
+    my $transient_dsn_bounce_hassle = 'deal with transient problems';
+    signup_user(email_n(3), $transient_dsn_bounce_hassle);
+    my $transient_dsn_bounce_email = 'Return-path: <>
+Envelope-to: hm@sandwich.ukcod.org.uk
+Delivery-date: Wed, 10 Sep 2008 11:01:47 +0100
+From: postmaster@onmobile.com
+To: hm@sandwich.ukcod.org.uk
+Date: Wed, 10 Sep 2008 15:31:36 +0530
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=neXtPaRt_1221041185"
+X-DSNContext: 7ce717b1 - 1158 - 00000002 - 00000000
+Message-ID: <QuTnAgQoM0000132e@newexchangemail.onmobile.com>
+Subject: Delivery Status Notification (Failure)
+Status: O
+Content-Length: 4187
+Lines: 104
+
+
+------=neXtPaRt_1221041185
+Content-Type: multipart/report; report-type=delivery-status;
+	boundary="9B095B5ADSN=_01C90E572A9958EA00031445newexchangemail."
+
+This is a MIME-formatted message.  
+Portions of this message may be unreadable without a MIME-capable mail program.
+
+--9B095B5ADSN=_01C90E572A9958EA00031445newexchangemail.
+Content-Type: text/plain; charset=unicode-1-1-utf-7
+
+This is an automatically generated Delivery Status Notification.
+
+Delivery to the following recipients failed.
+
+       ' . email_n(3) . '
+
+
+
+
+--9B095B5ADSN=_01C90E572A9958EA00031445newexchangemail.
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns;newexchangemail.onmobile.com
+Received-From-MTA: dns;xmail.onmobile.com
+Arrival-Date: Wed, 10 Sep 2008 15:31:35 +0530
+
+Final-Recipient: rfc822; ' . email_n(3) . '
+Action: delayed
+Status: 4.4.1 (Persistent transient failure - routing/network: no answer from host)
+Will-Retry-Until: Mon, 26 Mar 2001 03:42:45 +0100
+
+--9B095B5ADSN=_01C90E572A9958EA00031445newexchangemail.
+Content-Type: message/rfc822
+From: Hasslebot <hassle@hassleme.co.uk>
+To: ' . email_n(3) . '
+Subject: Don\'t forget to... 
+Message-ID: <5110b2dfe097fca2f@hassleme.co.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Sender: HassleMe <hm@sandwich.ukcod.org.uk>
+Date: Wed, 10 Sep 2008 11:01:26 +0100
+Return-Path: hm@sandwich.ukcod.org.uk
+X-OriginalArrivalTime: 10 Sep 2008 10:01:35.0381 (UTC) FILETIME=[357F8C50:01C9132C]
+
+Message content
+
+
+--9B095B5ADSN=_01C90E572A9958EA00031445newexchangemail.--
+
+------=neXtPaRt_1221041185
+Content-Type: text/plain;
+
+Disclaimer
+
+------=neXtPaRt_1221041185--
+';
+
+    expect_mail_outcome('ignored', $transient_dsn_bounce_email);
+
+    # Hassle should still be in the set considered for emails
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;
+    die 'Inactive hassle for user following non bounce mail' unless ($hassle_output =~ /$transient_dsn_bounce_hassle/);
 }
 #----------------------------------
 sub do_non_bounce_reply_without_verp_test(){
     
     my $non_bouncing_hassle = 'get out of the office more';
     signup_user(email_n(2), $non_bouncing_hassle);
-    my $non_bounce_email = 'From ' . email_n(2) . ' Tue Sep 09 16:25:52 2008
-Return-path: <' . email_n(2) . '>
+    my $non_bounce_email = 'Return-path: <' . email_n(2) . '>
 Envelope-to: hm-testharness@sandwich.ukcod.org.uk
 Delivery-date: Tue, 09 Sep 2008 16:25:52 +0100
 X-IronPort-AV: E=Sophos;i="4.32,366,1217822400"; 
@@ -187,7 +275,8 @@ Content-Disposition: inline
 I will respond to your message when I return.</body></html>
 --0__=0ABBFE2CDFC738E48f9e8a93df938690918c0ABBFE2CDFC738E4--
     ';
-    call_handlemail($non_bounce_email);
+
+    expect_mail_outcome('ignored', $non_bounce_email);
 
     # Hassle should still be in the set considered for emails
     my $hassle_output = `./send-hassles --verbose=1 2>&1`;    
@@ -198,8 +287,7 @@ sub do_permanent_bounce_without_verp_test(){
     
     my $bouncing_hassle = 'keep my email account from being shut down';
     signup_user(email_n(1), $bouncing_hassle);
-    my $bounce_email = 'From MAILER-DAEMON Tue Sep 09 17:04:38 2008
-Return-path: <>
+    my $bounce_email = 'Return-path: <>
 Envelope-to: hm-testharness@sandwich.ukcod.org.uk
 Delivery-date: Tue, 09 Sep 2008 17:04:38 +0100
 From: postmaster@yoo.com
@@ -260,7 +348,7 @@ Message content
 --9B095B5ADSN=_01C8F669DA6E489E0002048Dsmtp.yoo.com--    
 ';
 
-    call_handlemail($bounce_email);
+    expect_mail_outcome('deleted', $bounce_email);
 
     # Hassle should no longer be in the set considered for emails
     my $hassle_output = `./send-hassles --verbose=1 2>&1`;    
@@ -283,11 +371,11 @@ print "Testing deletion of recipient following permanent bounce...\n" if $verbos
 do_permanent_bounce_without_verp_test();
 
 # Test the handling of a non-bounce reply to a hassle - should be ignored
-print "Testing non-bounce reply is ignored" if $verbose > 0; 
+print "Testing non-bounce reply is ignored...\n" if $verbose > 0; 
 do_non_bounce_reply_without_verp_test();
 
 # Test the handling of a transient DSN bounce
-print "Testing transient DSN bounce is ignored" if $verbose > 0;
+print "Testing transient DSN bounce is ignored...\n" if $verbose > 0;
 do_transient_bounce_without_verp_test();
 
 print "Checking no emails left at end...\n" if $verbose > 0;
