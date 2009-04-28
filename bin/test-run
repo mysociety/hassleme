@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.15 2009-04-28 12:49:32 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.16 2009-04-28 13:06:02 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -148,7 +148,7 @@ sub expect_mail_outcome($$){
 
 }
 #----------------------------------
-sub do_transient_bounce_without_verp_test(){
+sub do_transient_dsn_bounce_without_verp_test(){
 
     my $transient_dsn_bounce_hassle = 'deal with transient problems';
     signup_user(email_n(3), $transient_dsn_bounce_hassle);
@@ -283,7 +283,7 @@ I will respond to your message when I return.</body></html>
     die 'Inactive hassle for user following non bounce mail' unless ($hassle_output =~ /$non_bouncing_hassle/);
 }
 #----------------------------------
-sub do_permanent_bounce_without_verp_test(){
+sub do_permanent_dsn_bounce_without_verp_test(){
     
     my $bouncing_hassle = 'keep my email account from being shut down';
     signup_user(email_n(1), $bouncing_hassle);
@@ -355,6 +355,76 @@ Message content
     die 'Active hassle for deleted user' if ($hassle_output =~ /$bouncing_hassle/);
 }
 #----------------------------------
+sub do_permanent_dsn_bounce_without_verp_no_email_test(){
+    
+    my $bouncing_hassle = 'try to remember my email address';
+    signup_user(email_n(4), $bouncing_hassle);
+    my $dsn_bounce_email = 'Return-path: <>
+    Envelope-to: hm@sandwich.ukcod.org.uk
+    Delivery-date: Tue, 09 Sep 2008 17:00:52 +0100
+    Date: Tue, 09 Sep 2008 11:00:40 -0500
+    From: Mail Delivery System <postmaster@students.niu.edu>
+    Message-Id: <1220976040-13870@students.niu.edu>
+    To: <hm@sandwich.ukcod.org.uk>
+    MIME-Version: 1.0
+    Content-Type: multipart/report; report-type=delivery-status;
+    	boundary="1220976040-13870-students.niu.edu"
+    Subject: Returned mail: User unknown
+    Precedence: bulk
+    Status: O
+    Content-Length: 1848
+    Lines: 52
+
+    This is a MIME-encapsulated message
+
+    --1220976040-13870-students.niu.edu
+    Content-type: text/plain; charset=US-ASCII
+
+    The original message was received Tue, 09 Sep 2008 11:00:40 -0500
+    from -
+
+       ----- The following address(es) had permanent fatal errors -----
+    <anon>; originally to anon (unrecoverable error)
+      	The recipient \'anon\' is unknown
+
+    --1220976040-13870-students.niu.edu
+    Content-type: message/delivery-status
+
+    Reporting-MTA: dns; students.niu.edu
+    Arrival-Date: Tue, 09 Sep 2008 11:00:40 -0500
+
+    Original-Recipient: anon
+    Final-Recipient: anon
+    Action: failed
+    Status: 5.0.0
+    --1220976040-13870-students.niu.edu
+    Content-type: message/rfc822
+
+    From: Hasslebot <hassle@hassleme.co.uk>
+    To: rbenyo@niu.edu
+    Subject: Don\'t forget to...
+    Message-ID: <b08207e35fe8a8f8f@hassleme.co.uk>
+    MIME-Version: 1.0
+    Content-Type: text/plain; charset=utf-8
+    Content-Transfer-Encoding: quoted-printable
+    Sender: HassleMe <hm@sandwich.ukcod.org.uk>
+    Date: Tue, 09 Sep 2008 17:00:24 +0100
+    X-Spam-Score: 0.00 () [Hold at 5.00] 
+    X-CanItPRO-Stream: anon redirected to 03_Aggressive
+    X-Scanned-By: CanIt (www . roaringpenguin . com) on 131.156.1.111
+
+    -- Message body has been omitted --
+
+    --1220976040-13870-students.niu.edu--
+    ';
+    
+    expect_mail_outcome('unparsed', $dsn_bounce_email);
+
+    # Hassle should still be in the set considered for hassles
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;    
+    die 'Active hassle for deleted user' unless ($hassle_output =~ /$bouncing_hassle/);
+} 
+#----------------------------------
 sub do_basic_signup_test(){
     
     my $test_hassle = 'run the test suite for Hassleme';
@@ -367,8 +437,8 @@ print "Testing basic signup...\n" if $verbose > 0;
 do_basic_signup_test();
 
 # Test the deletion of a recipient whose hassles produce permanent bounces
-print "Testing deletion of recipient following permanent bounce...\n" if $verbose > 0;
-do_permanent_bounce_without_verp_test();
+print "Testing deletion of recipient following permanent DSN bounce...\n" if $verbose > 0;
+do_permanent_dsn_bounce_without_verp_test();
 
 # Test the handling of a non-bounce reply to a hassle - should be ignored
 print "Testing non-bounce reply is ignored...\n" if $verbose > 0; 
@@ -376,7 +446,11 @@ do_non_bounce_reply_without_verp_test();
 
 # Test the handling of a transient DSN bounce
 print "Testing transient DSN bounce is ignored...\n" if $verbose > 0;
-do_transient_bounce_without_verp_test();
+do_transient_dsn_bounce_without_verp_test();
+
+# Test the handling of a permanent DSN bounce where the recipient can't be figured out 
+print "Testing permanent DSN bounce where recipient can't be parsed...\n" if $verbose > 0;
+do_permanent_dsn_bounce_without_verp_no_email_test();
 
 print "Checking no emails left at end...\n" if $verbose > 0;
 $wth->email_check_none_left();
