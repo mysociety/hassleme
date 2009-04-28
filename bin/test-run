@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.17 2009-04-28 13:21:23 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.18 2009-04-28 13:25:55 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -401,7 +401,7 @@ sub do_unparsable_bounce_without_verp_test(){
 
     # Hassle should still be in the set considered for hassles
     my $hassle_output = `./send-hassles --verbose=1 2>&1`;    
-    die 'No hassle where we could not parse the bounce' unless ($hassle_output =~ /$unparsable_bounce_email/);
+    die 'No hassle where we could not parse the bounce' unless ($hassle_output =~ /$bouncing_hassle/);
 }
 
 #----------------------------------
