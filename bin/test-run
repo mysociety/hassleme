@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.19 2009-04-28 13:32:33 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.20 2009-04-28 13:38:33 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -424,9 +424,9 @@ sub do_permanent_bounce_without_verp_test(){
     This is the mail delivery agent at messagelabs.com.
     I was not able to deliver your message to the following addresses.
 
-    <anon@bigwidetalk.org>:
+    <' . email_n(6) . '>:
     217.112.88.213 does not like recipient.
-    Remote host said: 550 5.1.1 <anon@bigwidetalk.org>: Recipient address rejected: User unknown in virtual mailbox table
+    Remote host said: 550 5.1.1 <' . email_n(6) . '>: Recipient address rejected: User unknown in virtual mailbox table
 
 
     --- Below this line is a copy of the message.
@@ -568,7 +568,7 @@ print "Testing unparsable bounce - logged as unparsed...\n" if $verbose > 0;
 do_unparsable_bounce_without_verp_test();
 
 # Test the handling of a DSN bounce that we've classified as permanent
-print "Testing permanent non DSN bounce - unsubscribe user"; 
+print "Testing permanent non DSN bounce - unsubscribe user...\n" if $verbose > 0; 
 do_permanent_bounce_without_verp_test();
 
 print "Checking no emails left at end...\n" if $verbose > 0;
