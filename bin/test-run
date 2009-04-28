@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.9 2009-04-27 18:35:11 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.10 2009-04-28 09:31:01 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -125,8 +125,7 @@ sub do_permanent_bounce_without_verp_test(){
     
     my $bouncing_hassle = 'keep my email account from being shut down';
     signup_user(email_n(1), $bouncing_hassle);
-    my $bounce_email = '
-From MAILER-DAEMON Tue Sep 09 17:04:38 2008
+    my $bounce_email = 'From MAILER-DAEMON Tue Sep 09 17:04:38 2008
 Return-path: <>
 Envelope-to: hm-testharness@sandwich.ukcod.org.uk
 Delivery-date: Tue, 09 Sep 2008 17:04:38 +0100
@@ -163,7 +162,7 @@ Reporting-MTA: dns;smtp.yoo.com
 Received-From-MTA: dns;ixe-mta-02.emailsystems.com
 Arrival-Date: Tue, 9 Sep 2008 17:02:22 +0100
 
-Final-Recipient: rfc822;anon@yooarehere.com
+Final-Recipient: rfc822;' . email_n(1) . '
 Action: failed
 Status: 5.1.1
 
@@ -172,7 +171,7 @@ Content-Type: message/rfc822
 
 X-EMS-Archived: 1160
 From: Hasslebot <hassle@hassleme.co.uk>
-To: anon@yooarehere.com
+To: ' . email_n(1) . '
 Subject: Don\'t forget to... 
 Message-ID: <6fb670547a7e878cf@hassleme.co.uk>
 MIME-Version: 1.0
@@ -187,10 +186,11 @@ Message content
 
 --9B095B5ADSN=_01C8F669DA6E489E0002048Dsmtp.yoo.com--    
 ';
+
     call_handlemail($bounce_email);
-    
     # Hassle should no longer be in the set considered for emails
     my $hassle_output = `./send-hassles --verbose=1 2>&1`;
+    
     die 'Active hassle for deleted user' if ($hassle_output =~ /$bouncing_hassle/);
 }
 #----------------------------------
