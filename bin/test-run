@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.12 2009-04-28 10:37:52 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.13 2009-04-28 10:40:24 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -259,7 +259,7 @@ print "Testing deletion of recipient following permanent bounce...\n" if $verbos
 do_permanent_bounce_without_verp_test();
 
 # Test the handling of a non-bounce reply to a hassle - should be ignored
-print "Testing non-bounce reply is ignored"; 
+print "Testing non-bounce reply is ignored" if $verbose > 0; 
 do_non_bounce_reply_without_verp_test();
 
 print "Checking no emails left at end...\n" if $verbose > 0;
