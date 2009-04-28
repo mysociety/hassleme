@@ -6,7 +6,7 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-# $Id: Hassle.pm,v 1.6 2009-04-27 13:47:48 louise Exp $
+# $Id: Hassle.pm,v 1.7 2009-04-28 14:27:05 louise Exp $
 #
 
 package Hassle;
@@ -16,6 +16,7 @@ use DBD::Pg;
 use Digest::SHA1 qw(sha1_hex);
 use IO::Pipe;
 use MIME::QuotedPrint;
+use mySociety::HandleMail;
 use POSIX qw();
 
 use mySociety::Config;
@@ -60,7 +61,17 @@ sub secret () {
     return scalar(dbh()->selectrow_array('select secret from secret'));
 }
 
-=item sendmail RECIPIENT SUBJECT TEXT
+=item verp_envelope_sender RECIPIENT
+
+Construct a VERP envelope sender for an email to RECIPIENT
+
+=cut 
+sub verp_envelope_sender($){
+    my ($recipient) = @_;
+    mySociety::HandleMail::verp_envelope_sender($recipient,  mySociety::Config::get('EMAIL_PREFIX'),  mySociety::Config::get('EMAIL_DOMAIN'));
+}
+
+=item sendmail RECIPIENT SUBJECT TEXT 
 
 Send an email to RECIPIENT with the given SUBJECT and TEXT. Subject and body
 should be UTF-8 strings.
@@ -82,6 +93,8 @@ EOF
         $subject = "=?UTF-8?Q?$subject?=";
     }
 
+    # Create a VERP envelope sender
+    my $sender = verp_envelope_sender($to);
     # Generate a message-ID.
     my $msgid = sprintf('<%08x%0xf@hassleme.co.uk>',
                         int(rand(0xffffffff)), int(rand(0xffffffff)));
@@ -92,7 +105,7 @@ EOF
         $p->reader();
         POSIX::close(0);
         POSIX::dup($p->fileno());
-        { exec(mySociety::Config::get('SENDMAIL'), $to); }
+        { exec(mySociety::Config::get('SENDMAIL'), '-f ' . $sender, $to); }
         die mySociety::Config::get('SENDMAIL') . ": exec: $!";
     }
     
