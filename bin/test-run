@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.20 2009-04-28 13:38:33 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.21 2009-04-28 13:45:32 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -230,7 +230,7 @@ Disclaimer
 
     # Hassle should still be in the set considered for emails
     my $hassle_output = `./send-hassles --verbose=1 2>&1`;
-    die 'Inactive hassle for user following non bounce mail' unless ($hassle_output =~ /$transient_dsn_bounce_hassle/);
+    die 'Inactive hassle for user following transient bounce mail' unless ($hassle_output =~ /$transient_dsn_bounce_hassle/);
 }
 #----------------------------------
 sub do_non_bounce_reply_without_verp_test(){
@@ -404,6 +404,59 @@ sub do_unparsable_bounce_without_verp_test(){
     die 'No hassle where we could not parse the bounce' unless ($hassle_output =~ /$bouncing_hassle/);
 }
 #----------------------------------
+sub do_transient_bounce_without_verp_test(){
+    my $bouncing_hassle = 'Empty my mailbox';
+    signup_user(email_n(7), $bouncing_hassle);
+    my $transient_bounce_email = 'Return-path: <>
+    Envelope-to: hm@sandwich.ukcod.org.uk
+    Delivery-date: Thu, 02 Apr 2009 16:34:38 +0100
+    Date: 2 Apr 2009 15:13:20 -0000
+    From: MAILER-DAEMON@boltblue.net
+    To: hm@sandwich.ukcod.org.uk
+    Subject: failure notice
+    Status: O
+    Content-Length: 3788
+    Lines: 92
+
+    Hi. This is the qmail-send program at boltblue.net.
+    I\'m afraid I wasn\'t able to deliver your message to the following addresses.
+    This is a permanent error; I\'ve given up. Sorry it didn\'t work out.
+    *
+    * You\'ve experienced some sort of problem sending mail to one of our users.
+    * (Please contact us at <support@boltblue.com> if you require assistance)
+    *
+    * Below is the original mail and the failure reason:
+    *
+
+
+    <' . email_n(7) . '>:
+    The users mailfolder is over the allowed quota (size). (#5.2.2)
+
+    --- Below this line is a copy of the message.
+
+    Return-Path: <hm@sandwich.ukcod.org.uk>
+    To: ' . email_n(7) . '
+    Subject: Your TheyWorkForYou email alert
+    From: hm@sandwich.ukcod.org.uk
+    Content-Type: text/plain; charset=iso-8859-1
+    MIME-Version: 1.0
+    Content-Transfer-Encoding: 8bit
+    Precedence: bulk
+    X-Mailer: PHP/5.2.0-8+etch13
+    Message-Id: <E1LpObX-00039s-Uy@sponge.ukcod.org.uk>
+    Date: Thu, 02 Apr 2009 16:13:19 +0100
+
+
+    Message content
+    ';
+    
+    expect_mail_outcome('ignored', $transient_bounce_email);
+
+    # Hassle should still be in the set considered for emails
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;
+    die 'Inactive hassle for user following transient bounce mail' unless ($hassle_output =~ /$bouncing_hassle/);
+}
+#----------------------------------
 sub do_permanent_bounce_without_verp_test(){
     
     my $bouncing_hassle = 'Change email provider'; 
@@ -567,9 +620,13 @@ do_permanent_dsn_bounce_without_verp_no_email_test();
 print "Testing unparsable bounce - logged as unparsed...\n" if $verbose > 0;
 do_unparsable_bounce_without_verp_test();
 
-# Test the handling of a DSN bounce that we've classified as permanent
+# Test the handling of a non-DSN bounce that we've classified as permanent
 print "Testing permanent non DSN bounce - unsubscribe user...\n" if $verbose > 0; 
 do_permanent_bounce_without_verp_test();
+
+# Test the handling of a non-DSN bounce that we've classified as transient
+print "Testing transicent non DSN bounce - ignore...\n" if $verbose > 0;
+do_transient_bounce_without_verp_test();
 
 print "Checking no emails left at end...\n" if $verbose > 0;
 $wth->email_check_none_left();
