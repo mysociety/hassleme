@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.10 2009-04-28 09:31:01 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.11 2009-04-28 09:36:07 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -81,7 +81,7 @@ sub signup_user($$){
     $wth->browser_check_contents("This is a test site");
    
     $wth->browser_submit_form(form_name => 'createHassleForm',
-        fields => { freq => "1", 
+        fields => { freq => "3650", 
                     what => $test_hassle,
                     email => $email, 
                     public => "true"},  
