@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.16 2009-04-28 13:06:02 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.17 2009-04-28 13:21:23 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -355,6 +355,56 @@ Message content
     die 'Active hassle for deleted user' if ($hassle_output =~ /$bouncing_hassle/);
 }
 #----------------------------------
+sub do_unparsable_bounce_without_verp_test(){
+    
+    my $bouncing_hassle = 'write a cool bounce generator';
+    signup_user(email_n(5), $bouncing_hassle);
+    my $unparsable_bounce_email = 'Return-path: <>
+    Envelope-to: hm@sandwich.ukcod.org.uk
+    Delivery-date: Fri, 12 Sep 2008 11:04:08 +0100
+    DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+            d=gmail.com; s=gamma;
+            h=domainkey-signature:received:message-id:date:from:to:subject
+             :mime-version:content-type:content-transfer-encoding
+             :content-disposition:precedence:x-autoreply;
+            bh=yk0ym25nMxp9VqX2xHnhApzGkTMVwvxMNdQv5jRk850=;
+            b=EV1ROVDs/bnlW82yxkO4vNKy5fFoLqIctOFu0Yrfm7ENKWf5dvJV77L3IdxY4CvL80
+             oboslfa1fnzlaa/d+X743z8j6Q70nfXyWKkIOiQvEPLZSvuRiyg0zdPywMiE+ryEK8YE
+             GE6g7GIBn2M1/RA8foZVDXOsCtFBQ8UI/g1IA=
+    DomainKey-Signature: a=rsa-sha1; c=nofws;
+            d=gmail.com; s=gamma;
+            h=message-id:date:from:to:subject:mime-version:content-type
+             :content-transfer-encoding:content-disposition:precedence
+             :x-autoreply;
+            b=HZibsSLrmXu9UnPyqZocC8PhhedFTm1qa/4iPtk9HjqzzwG1zjHahPX9EItk2PN2IQ
+             eMjoS+MbkrwZhG+1jZgnGWewuZTZCjb9B3dGXONfph/CJUVtBMQH7ggPJx0h+PS+7CRG
+             fI6kRFTMgL3X2UFbTCezntocXdDUIY0+Z0QDg=
+    Message-ID: <3e5992620809120304w71861aco@mail.gmail.com>
+    Date: Fri, 12 Sep 2008 03:04:07 -0700
+    From: anon@gmail.com
+    To: hm@sandwich.ukcod.org.uk
+    Subject: [AWAY NOTICE] 
+    MIME-Version: 1.0
+    Content-Type: text/plain; charset=ISO-8859-1
+    Content-Transfer-Encoding: 7bit
+    Content-Disposition: inline
+    Precedence: bulk
+    X-Autoreply: yes
+    Status: O
+    Content-Length: 791
+    Lines: 22
+
+    Hello. I have written my own bounce generator. It is completely unstandard.
+    ';
+    
+    expect_mail_outcome('unparsed', $unparsable_bounce_email);
+
+    # Hassle should still be in the set considered for hassles
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;    
+    die 'No hassle where we could not parse the bounce' unless ($hassle_output =~ /$unparsable_bounce_email/);
+}
+
+#----------------------------------
 sub do_permanent_dsn_bounce_without_verp_no_email_test(){
     
     my $bouncing_hassle = 'try to remember my email address';
@@ -422,7 +472,7 @@ sub do_permanent_dsn_bounce_without_verp_no_email_test(){
 
     # Hassle should still be in the set considered for hassles
     my $hassle_output = `./send-hassles --verbose=1 2>&1`;    
-    die 'Active hassle for deleted user' unless ($hassle_output =~ /$bouncing_hassle/);
+    die 'No hassle for user where we could not figure out bounce recipient' unless ($hassle_output =~ /$bouncing_hassle/);
 } 
 #----------------------------------
 sub do_basic_signup_test(){
@@ -449,8 +499,12 @@ print "Testing transient DSN bounce is ignored...\n" if $verbose > 0;
 do_transient_dsn_bounce_without_verp_test();
 
 # Test the handling of a permanent DSN bounce where the recipient can't be figured out 
-print "Testing permanent DSN bounce where recipient can't be parsed...\n" if $verbose > 0;
+print "Testing permanent DSN bounce where recipient can't be parsed - logged as unparsed...\n" if $verbose > 0;
 do_permanent_dsn_bounce_without_verp_no_email_test();
+
+# Test the handling of an unparsable bounce 
+print "Testing unparsable bounce - logged as unparsed...\n" if $verbose > 0;
+do_unparsable_bounce_without_verp_test();
 
 print "Checking no emails left at end...\n" if $verbose > 0;
 $wth->email_check_none_left();
