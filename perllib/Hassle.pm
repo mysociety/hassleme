@@ -6,7 +6,7 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-# $Id: Hassle.pm,v 1.7 2009-04-28 14:27:05 louise Exp $
+# $Id: Hassle.pm,v 1.8 2009-04-28 15:00:22 louise Exp $
 #
 
 package Hassle;
@@ -16,7 +16,9 @@ use DBD::Pg;
 use Digest::SHA1 qw(sha1_hex);
 use IO::Pipe;
 use MIME::QuotedPrint;
+use mySociety::Email;
 use mySociety::HandleMail;
+use mySociety::EmailUtil;
 use POSIX qw();
 
 use mySociety::Config;
@@ -95,38 +97,26 @@ EOF
 
     # Create a VERP envelope sender
     my $sender = verp_envelope_sender($to);
+
     # Generate a message-ID.
     my $msgid = sprintf('<%08x%0xf@hassleme.co.uk>',
                         int(rand(0xffffffff)), int(rand(0xffffffff)));
 
-    my $p = new IO::Pipe() || die "pipe: $!";
-    die "fork: $!" if (!defined(my $pid = fork()));
-    if ($pid == 0) {
-        $p->reader();
-        POSIX::close(0);
-        POSIX::dup($p->fileno());
-        { exec(mySociety::Config::get('SENDMAIL'), '-f ' . $sender, $to); }
-        die mySociety::Config::get('SENDMAIL') . ": exec: $!";
-    }
-    
-    $p->writer();
-    $p->print(<<EOF,
-From: Hasslebot <hassle\@hassleme.co.uk>
-To: $to
-Subject: $subject
-Message-ID: $msgid
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-EOF
-            MIME::QuotedPrint::encode_qp($text)
-        ) || die "write to sendmail: $!";
-    $p->close();
-
-    wait();
-    if ($? != 0) {
-        die "sendmail: \$? = $?";
+    my $mail = mySociety::Email::construct_email({
+        _unwrapped_body_ => MIME::QuotedPrint::encode_qp($text),
+    	From => ['hassle@hassleme.co.uk', 'HassleBot'],
+    	Subject => $subject,
+    	To => $to,
+    	'Message-ID' => $msgid,
+    });
+  
+    my $result = mySociety::EmailUtil::send_email($mail, $sender, $to);
+    if ($result == mySociety::EmailUtil::EMAIL_SUCCESS) {
+        
+    } elsif ($result == mySociety::EmailUtil::EMAIL_SOFT_ERROR) {
+        die "soft error delivering message by email to $to";
+    } else {
+        die "hard error delivering message by email to $to";
     }
 }
 
@@ -198,39 +188,9 @@ explaining what's wrong with it.
 =cut
 sub is_valid_email ($) {
     my $addr = shift;
-    our $is_valid_address_re;
+    my $is_valid = mySociety::EmailUtil::is_valid_email($addr);
 
-    # This is derived from the grammar in RFC2822.
-    if (!defined($is_valid_address_re)) {
-        # mailbox = local-part "@" domain
-        # local-part = dot-string | quoted-string
-        # dot-string = atom ("." atom)*
-        # atom = atext+
-        # atext = any character other than space, specials or controls
-        # quoted-string = '"' (qtext|quoted-pair)* '"'
-        # qtext = any character other than '"', '\', or CR
-        # quoted-pair = "\" any character
-        # domain = sub-domain ("." sub-domain)* | address-literal
-        # sub-domain = [A-Za-z0-9][A-Za-z0-9-]*
-        # XXX ignore address-literal because nobody uses those...
-
-        my $specials = '()<>@,;:\\\\".\\[\\]';
-        my $controls = '\\000-\\037\\177';
-        my $highbit = '\\200-\\377';
-        my $atext = "[^$specials $controls$highbit]";
-        my $atom = "$atext+";
-        my $dot_string = "$atom(\\s*\\.\\s*$atom)*";
-        my $qtext = "[^\"\\\\\\r\\n$highbit]";
-        my $quoted_pair = '\\.';
-        my $quoted_string = "\"($qtext|$quoted_pair)*\"";
-        my $local_part = "($dot_string|$quoted_string)";
-        my $sub_domain = '[A-Za-z0-9][A-Za-z0-9-]*';
-        my $domain = "$sub_domain(\\s*\\.\\s*$sub_domain)*";
-
-        $is_valid_address_re = "^$local_part\\s*@\\s*$domain\$";
-    }
-
-    if ($addr =~ m#$is_valid_address_re#) {
+    if ($is_valid) {
         my ($domain) = ($addr =~ /@(.+)/);
         our $R;
         if (!$R) {
