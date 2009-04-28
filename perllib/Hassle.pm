@@ -6,7 +6,7 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-# $Id: Hassle.pm,v 1.10 2009-04-28 15:09:57 louise Exp $
+# $Id: Hassle.pm,v 1.11 2009-04-28 15:47:19 louise Exp $
 #
 
 package Hassle;
@@ -63,6 +63,19 @@ sub secret () {
     return scalar(dbh()->selectrow_array('select secret from secret'));
 }
 
+=item get_bounced_address ADDRESS
+
+Get the bounced address from a VERP address created with verp_envelope_sender
+
+=cut
+sub get_bounced_address($){
+    my ($address) = @_;
+    my $prefix =  mySociety::Config::get('EMAIL_PREFIX');
+    my $domain =  mySociety::Config::get('EMAIL_DOMAIN');
+    my $bounced_address =  mySociety::HandleMail::get_bounced_address($address, $prefix, $domain);
+    return $bounced_address;
+}
+
 =item verp_envelope_sender RECIPIENT
 
 Construct a VERP envelope sender for an email to RECIPIENT
@@ -106,7 +119,7 @@ EOF
                         int(rand(0xffffffff)), int(rand(0xffffffff)));
 
     my $mail = mySociety::Email::construct_email({
-        _unwrapped_body_ => MIME::QuotedPrint::encode_qp($text),
+        _body_ => MIME::QuotedPrint::encode_qp($text),
     	From => ['hassle@hassleme.co.uk', 'HassleBot'],
     	Subject => $subject,
     	To => $to,
