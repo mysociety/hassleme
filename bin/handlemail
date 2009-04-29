@@ -9,7 +9,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: handlemail,v 1.5 2009-04-29 11:56:46 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: handlemail,v 1.6 2009-04-29 14:35:39 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -42,6 +42,18 @@ sub mark_as($%){
     close FILE; 
 }
 #----------------------
+sub mark_deleted($$$){
+    my ($recipient, $data, $bounced_address) = @_;
+    my $email = $bounced_address || $recipient;
+    if ($email){
+        delete_recipient($email);
+        mark_as('deleted', $data);
+    }else{
+        mark_as('unparsed', $data);
+    }
+}
+
+#----------------------
 sub handle_dsn_bounce($$$){
 
     my ($r, $data, $bounced_address) = @_;
@@ -50,13 +62,7 @@ sub handle_dsn_bounce($$$){
     if ($status !~ /^5\./ || $status eq '5.2.2'){
         mark_as('ignored', $data);
     }else{
-        if ($attributes{recipient}){
-            delete_recipient($attributes{recipient});
-            mark_as('deleted', $data);
-        }else{
-            mark_as('unparsed', $data);
-        }
-        
+        mark_deleted($attributes{recipient}, $data, $bounced_address);
     }
         
 }
@@ -69,12 +75,7 @@ sub handle_non_dsn_bounce($$$){
         return;
     }
     if (mySociety::HandleMail::is_permanent($attribute_hash{problem})){
-        if ($attribute_hash{email_address}){
-            delete_recipient($attribute_hash{email_address});
-            mark_as('deleted', $data);
-        }else{
-            mark_as('unparsed', $data);
-        }
+        mark_deleted($attribute_hash{email_address}, $data, $bounced_address);
     }else{
         mark_as('ignored', $data);
     }
