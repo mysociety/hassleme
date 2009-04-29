@@ -3,10 +3,10 @@
 # HassleMail.pm:
 # Common code for hassleme incoming mail handling.
 #
-# Copyright (c) 2009 Chris Lightfoot. All rights reserved.
+# Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org
 #
-# $Id: HassleMail.pm,v 1.1 2009-04-29 15:52:48 louise Exp $
+# $Id: HassleMail.pm,v 1.2 2009-04-29 15:56:01 louise Exp $
 #
 
 package HassleMail;

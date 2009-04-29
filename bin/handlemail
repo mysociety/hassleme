@@ -9,7 +9,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: handlemail,v 1.7 2009-04-29 15:52:48 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: handlemail,v 1.8 2009-04-29 15:56:01 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -18,7 +18,7 @@ require 5.8.0;
 use FindBin;
 use lib "$FindBin::Bin/../perllib";
 use lib "$FindBin::Bin/../../perllib";
-use HandleMail;
+use mySociety::HandleMail;
 use HassleMail;
 
 #----------------------
