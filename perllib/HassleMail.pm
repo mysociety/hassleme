@@ -6,7 +6,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org
 #
-# $Id: HassleMail.pm,v 1.2 2009-04-29 15:56:01 louise Exp $
+# $Id: HassleMail.pm,v 1.3 2009-04-29 16:00:00 louise Exp $
 #
 
 package HassleMail;
@@ -115,3 +115,4 @@ sub handle_incoming($){
     }
 }
 #----------------------
+1;
