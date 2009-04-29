@@ -1,0 +1,29 @@
+#!/usr/bin/perl -w
+#
+# deal-with-bounce-backlog:
+# Handle a backlog of bounced messages in a mailbox file.
+#
+#
+# Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
+# Email: louise@mysociety.org; WWW: http://www.mysociety.org/
+
+my $rcsid = ''; $rcsid .= '$Id: deal-with-bounce-backlog,v 1.1 2009-04-29 16:48:24 louise Exp $';
+
+use strict;
+require 5.8.0;
+
+# Horrible boilerplate to set up appropriate library paths.
+use FindBin;
+use lib "$FindBin::Bin/../perllib";
+use lib "$FindBin::Bin/../../perllib";
+use mySociety::HandleMail;
+use HassleMail;
+
+@emails = mySociety::HandleMail::process_mailbox(HassleMail::MAIL_LOG_PREFIX . 'ignored');
+
+for my $data (@emails){
+    my %data_hash = %{$data};
+    print $data_hash{is_bounce_message};
+    # HassleMail::handle_incoming($data);
+}
+print 'done';
