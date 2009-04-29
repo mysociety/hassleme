@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.24 2009-04-29 14:08:05 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.25 2009-04-29 14:13:58 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -358,42 +358,42 @@ sub do_unparsable_bounce_without_verp_test(){
     my $bouncing_hassle = 'write a cool bounce generator';
     signup_user(email_n(5), $bouncing_hassle);
     my $unparsable_bounce_email = 'Return-path: <>
-    Envelope-to: hm@sandwich.ukcod.org.uk
-    Delivery-date: Fri, 12 Sep 2008 11:04:08 +0100
-    DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-            d=gmail.com; s=gamma;
-            h=domainkey-signature:received:message-id:date:from:to:subject
-             :mime-version:content-type:content-transfer-encoding
-             :content-disposition:precedence:x-autoreply;
-            bh=yk0ym25nMxp9VqX2xHnhApzGkTMVwvxMNdQv5jRk850=;
-            b=EV1ROVDs/bnlW82yxkO4vNKy5fFoLqIctOFu0Yrfm7ENKWf5dvJV77L3IdxY4CvL80
-             oboslfa1fnzlaa/d+X743z8j6Q70nfXyWKkIOiQvEPLZSvuRiyg0zdPywMiE+ryEK8YE
-             GE6g7GIBn2M1/RA8foZVDXOsCtFBQ8UI/g1IA=
-    DomainKey-Signature: a=rsa-sha1; c=nofws;
-            d=gmail.com; s=gamma;
-            h=message-id:date:from:to:subject:mime-version:content-type
-             :content-transfer-encoding:content-disposition:precedence
-             :x-autoreply;
-            b=HZibsSLrmXu9UnPyqZocC8PhhedFTm1qa/4iPtk9HjqzzwG1zjHahPX9EItk2PN2IQ
-             eMjoS+MbkrwZhG+1jZgnGWewuZTZCjb9B3dGXONfph/CJUVtBMQH7ggPJx0h+PS+7CRG
-             fI6kRFTMgL3X2UFbTCezntocXdDUIY0+Z0QDg=
-    Message-ID: <3e5992620809120304w71861aco@mail.gmail.com>
-    Date: Fri, 12 Sep 2008 03:04:07 -0700
-    From: anon@gmail.com
-    To: hm@sandwich.ukcod.org.uk
-    Subject: [AWAY NOTICE] 
-    MIME-Version: 1.0
-    Content-Type: text/plain; charset=ISO-8859-1
-    Content-Transfer-Encoding: 7bit
-    Content-Disposition: inline
-    Precedence: bulk
-    X-Autoreply: yes
-    Status: O
-    Content-Length: 791
-    Lines: 22
+Envelope-to: hm@sandwich.ukcod.org.uk
+Delivery-date: Fri, 12 Sep 2008 11:04:08 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=gamma;
+        h=domainkey-signature:received:message-id:date:from:to:subject
+         :mime-version:content-type:content-transfer-encoding
+         :content-disposition:precedence:x-autoreply;
+        bh=yk0ym25nMxp9VqX2xHnhApzGkTMVwvxMNdQv5jRk850=;
+        b=EV1ROVDs/bnlW82yxkO4vNKy5fFoLqIctOFu0Yrfm7ENKWf5dvJV77L3IdxY4CvL80
+         oboslfa1fnzlaa/d+X743z8j6Q70nfXyWKkIOiQvEPLZSvuRiyg0zdPywMiE+ryEK8YE
+         GE6g7GIBn2M1/RA8foZVDXOsCtFBQ8UI/g1IA=
+DomainKey-Signature: a=rsa-sha1; c=nofws;
+        d=gmail.com; s=gamma;
+        h=message-id:date:from:to:subject:mime-version:content-type
+         :content-transfer-encoding:content-disposition:precedence
+         :x-autoreply;
+        b=HZibsSLrmXu9UnPyqZocC8PhhedFTm1qa/4iPtk9HjqzzwG1zjHahPX9EItk2PN2IQ
+         eMjoS+MbkrwZhG+1jZgnGWewuZTZCjb9B3dGXONfph/CJUVtBMQH7ggPJx0h+PS+7CRG
+         fI6kRFTMgL3X2UFbTCezntocXdDUIY0+Z0QDg=
+Message-ID: <3e5992620809120304w71861aco@mail.gmail.com>
+Date: Fri, 12 Sep 2008 03:04:07 -0700
+From: anon@gmail.com
+To: hm@sandwich.ukcod.org.uk
+Subject: [AWAY NOTICE] 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Precedence: bulk
+X-Autoreply: yes
+Status: O
+Content-Length: 791
+Lines: 22
 
-    Hello. I have written my own bounce generator. It is completely unstandard.
-    ';
+Hello. I have written my own bounce generator. It is completely unstandard.
+';
     
     expect_mail_outcome('unparsed', $unparsable_bounce_email);
 
@@ -406,47 +406,47 @@ sub do_transient_bounce_without_verp_test(){
     my $bouncing_hassle = 'Empty my mailbox';
     signup_user(email_n(7), $bouncing_hassle);
     my $transient_bounce_email = 'Return-path: <>
-    Envelope-to: hm@sandwich.ukcod.org.uk
-    Delivery-date: Thu, 02 Apr 2009 16:34:38 +0100
-    Date: 2 Apr 2009 15:13:20 -0000
-    From: MAILER-DAEMON@boltblue.net
-    To: hm@sandwich.ukcod.org.uk
-    Subject: failure notice
-    Status: O
-    Content-Length: 3788
-    Lines: 92
+Envelope-to: hm@sandwich.ukcod.org.uk
+Delivery-date: Thu, 02 Apr 2009 16:34:38 +0100
+Date: 2 Apr 2009 15:13:20 -0000
+From: MAILER-DAEMON@boltblue.net
+To: hm@sandwich.ukcod.org.uk
+Subject: failure notice
+Status: O
+Content-Length: 3788
+Lines: 92
 
-    Hi. This is the qmail-send program at boltblue.net.
-    I\'m afraid I wasn\'t able to deliver your message to the following addresses.
-    This is a permanent error; I\'ve given up. Sorry it didn\'t work out.
-    *
-    * You\'ve experienced some sort of problem sending mail to one of our users.
-    * (Please contact us at <support@boltblue.com> if you require assistance)
-    *
-    * Below is the original mail and the failure reason:
-    *
-
-
-    <' . email_n(7) . '>:
-    The users mailfolder is over the allowed quota (size). (#5.2.2)
-
-    --- Below this line is a copy of the message.
-
-    Return-Path: <hm@sandwich.ukcod.org.uk>
-    To: ' . email_n(7) . '
-    Subject: Your TheyWorkForYou email alert
-    From: hm@sandwich.ukcod.org.uk
-    Content-Type: text/plain; charset=iso-8859-1
-    MIME-Version: 1.0
-    Content-Transfer-Encoding: 8bit
-    Precedence: bulk
-    X-Mailer: PHP/5.2.0-8+etch13
-    Message-Id: <E1LpObX-00039s-Uy@sponge.ukcod.org.uk>
-    Date: Thu, 02 Apr 2009 16:13:19 +0100
+Hi. This is the qmail-send program at boltblue.net.
+I\'m afraid I wasn\'t able to deliver your message to the following addresses.
+This is a permanent error; I\'ve given up. Sorry it didn\'t work out.
+*
+* You\'ve experienced some sort of problem sending mail to one of our users.
+* (Please contact us at <support@boltblue.com> if you require assistance)
+*
+* Below is the original mail and the failure reason:
+*
 
 
-    Message content
-    ';
+<' . email_n(7) . '>:
+The users mailfolder is over the allowed quota (size). (#5.2.2)
+
+--- Below this line is a copy of the message.
+
+Return-Path: <hm@sandwich.ukcod.org.uk>
+To: ' . email_n(7) . '
+Subject: Your TheyWorkForYou email alert
+From: hm@sandwich.ukcod.org.uk
+Content-Type: text/plain; charset=iso-8859-1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Precedence: bulk
+X-Mailer: PHP/5.2.0-8+etch13
+Message-Id: <E1LpObX-00039s-Uy@sponge.ukcod.org.uk>
+Date: Thu, 02 Apr 2009 16:13:19 +0100
+
+
+Message content
+';
     
     expect_mail_outcome('ignored', $transient_bounce_email);
 
@@ -460,54 +460,54 @@ sub do_permanent_bounce_without_verp_test(){
     my $bouncing_hassle = 'Change email provider'; 
     signup_user(email_n(6), $bouncing_hassle);
     my $permanent_bounce_email = 'Return-path: <>
-    Envelope-to: hm@sandwich.ukcod.org.uk
-    Delivery-date: Thu, 02 Apr 2009 16:21:34 +0100
-    X-VirusChecked: Checked
-    X-StarScan-Version: 6.0.0; banners=.,-,-
-    Date: 2 Apr 2009 15:21:32 -0000
-    From: MAILER-DAEMON@messagelabs.com
-    To: hm@sandwich.ukcod.org.uk
-    Subject: failure notice
-    Status: O
-    Content-Length: 4747
-    Lines: 104
+Envelope-to: hm@sandwich.ukcod.org.uk
+Delivery-date: Thu, 02 Apr 2009 16:21:34 +0100
+X-VirusChecked: Checked
+X-StarScan-Version: 6.0.0; banners=.,-,-
+Date: 2 Apr 2009 15:21:32 -0000
+From: MAILER-DAEMON@messagelabs.com
+To: hm@sandwich.ukcod.org.uk
+Subject: failure notice
+Status: O
+Content-Length: 4747
+Lines: 104
 
-    This is the mail delivery agent at messagelabs.com.
-    I was not able to deliver your message to the following addresses.
+This is the mail delivery agent at messagelabs.com.
+I was not able to deliver your message to the following addresses.
 
-    <' . email_n(6) . '>:
-    217.112.88.213 does not like recipient.
-    Remote host said: 550 5.1.1 <' . email_n(6) . '>: Recipient address rejected: User unknown in virtual mailbox table
+<' . email_n(6) . '>:
+217.112.88.213 does not like recipient.
+Remote host said: 550 5.1.1 <' . email_n(6) . '>: Recipient address rejected: User unknown in virtual mailbox table
 
 
-    --- Below this line is a copy of the message.
+--- Below this line is a copy of the message.
 
-    Return-Path: <hm@sandwich.ukcod.org.uk>
-    X-VirusChecked: Checked
-    X-Env-Sender: hm@sandwich.ukcod.org.uk
-    X-Msg-Ref: server-4.tower-78.messagelabs.com!1238685689!28730457!1
-    X-StarScan-Version: 6.0.0; banners=.,-,-
-    X-Originating-IP: [194.60.38.7]
-    X-VirusChecked: Checked
-    X-Env-Sender: hm@sandwich.ukcod.org.uk
-    X-Msg-Ref: server-10.tower-72.messagelabs.com!1238685686!51634554!1
-    X-StarScan-Version: 6.0.0; banners=-,-,-
-    X-Originating-IP: [82.111.230.211]
-    X-SpamReason: No, hits=0.0 required=7.0 tests=sa_preprocessor: 
-      VHJ1c3RlZCBJUDogODIuMTExLjIzMC4yMTEgPT4gMzE3NDM=\n
-    To: anon@parliament.uk
-    Subject: Don\'t forget to...
-    From: hm@sandwich.ukcod.org.uk
-    Content-Type: text/plain; charset=iso-8859-1
-    MIME-Version: 1.0
-    Content-Transfer-Encoding: 8bit
-    Precedence: bulk
-    X-Mailer: PHP/5.2.0-8+etch13
-    Message-Id: <E1LpOjO-0005TX-4F@sponge.ukcod.org.uk>
-    Date: Thu, 02 Apr 2009 16:21:26 +0100
-    X-OriginalArrivalTime: 02 Apr 2009 15:21:29.0243 (UTC) FILETIME=[B23376B0:01C9B3A6]
+Return-Path: <hm@sandwich.ukcod.org.uk>
+X-VirusChecked: Checked
+X-Env-Sender: hm@sandwich.ukcod.org.uk
+X-Msg-Ref: server-4.tower-78.messagelabs.com!1238685689!28730457!1
+X-StarScan-Version: 6.0.0; banners=.,-,-
+X-Originating-IP: [194.60.38.7]
+X-VirusChecked: Checked
+X-Env-Sender: hm@sandwich.ukcod.org.uk
+X-Msg-Ref: server-10.tower-72.messagelabs.com!1238685686!51634554!1
+X-StarScan-Version: 6.0.0; banners=-,-,-
+X-Originating-IP: [82.111.230.211]
+X-SpamReason: No, hits=0.0 required=7.0 tests=sa_preprocessor: 
+  VHJ1c3RlZCBJUDogODIuMTExLjIzMC4yMTEgPT4gMzE3NDM=\n
+To: anon@parliament.uk
+Subject: Don\'t forget to...
+From: hm@sandwich.ukcod.org.uk
+Content-Type: text/plain; charset=iso-8859-1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Precedence: bulk
+X-Mailer: PHP/5.2.0-8+etch13
+Message-Id: <E1LpOjO-0005TX-4F@sponge.ukcod.org.uk>
+Date: Thu, 02 Apr 2009 16:21:26 +0100
+X-OriginalArrivalTime: 02 Apr 2009 15:21:29.0243 (UTC) FILETIME=[B23376B0:01C9B3A6]
 
-    Message content
+Message content
     ';
     
     expect_mail_outcome('deleted', $permanent_bounce_email);
@@ -592,63 +592,63 @@ sub do_verp_bounce_test(){
     my $test_hassle = 'Learn all about VERP';
     signup_user(email_n(8), $test_hassle);
     my $verp_bounce_email = 'Return-path: <>
-    Envelope-to: hm@sandwich.ukcod.org.uk
-    Delivery-date: Tue, 09 Sep 2008 17:00:52 +0100
-    Date: Tue, 09 Sep 2008 11:00:40 -0500
-    From: Mail Delivery System <postmaster@students.niu.edu>
-    Message-Id: <1220976040-13870@students.niu.edu>
-    To: <' . verp_envelope_sender(email_n(8)) . '>
-    MIME-Version: 1.0
-    Content-Type: multipart/report; report-type=delivery-status;
-    	boundary="1220976040-13870-students.niu.edu"
-    Subject: Returned mail: User unknown
-    Precedence: bulk
-    Status: O
-    Content-Length: 1848
-    Lines: 52
+Envelope-to: hm@sandwich.ukcod.org.uk
+Delivery-date: Tue, 09 Sep 2008 17:00:52 +0100
+Date: Tue, 09 Sep 2008 11:00:40 -0500
+From: Mail Delivery System <postmaster@students.niu.edu>
+Message-Id: <1220976040-13870@students.niu.edu>
+To: <' . verp_envelope_sender(email_n(8)) . '>
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+	boundary="1220976040-13870-students.niu.edu"
+Subject: Returned mail: User unknown
+Precedence: bulk
+Status: O
+Content-Length: 1848
+Lines: 52
 
-    This is a MIME-encapsulated message
+This is a MIME-encapsulated message
 
-    --1220976040-13870-students.niu.edu
-    Content-type: text/plain; charset=US-ASCII
+--1220976040-13870-students.niu.edu
+Content-type: text/plain; charset=US-ASCII
 
-    The original message was received Tue, 09 Sep 2008 11:00:40 -0500
-    from -
+The original message was received Tue, 09 Sep 2008 11:00:40 -0500
+from -
 
-       ----- The following address(es) had permanent fatal errors -----
-    <anon>; originally to anon (unrecoverable error)
-      	The recipient \'anon\' is unknown
+   ----- The following address(es) had permanent fatal errors -----
+<anon>; originally to anon (unrecoverable error)
+  	The recipient \'anon\' is unknown
 
-    --1220976040-13870-students.niu.edu
-    Content-type: message/delivery-status
+--1220976040-13870-students.niu.edu
+Content-type: message/delivery-status
 
-    Reporting-MTA: dns; students.niu.edu
-    Arrival-Date: Tue, 09 Sep 2008 11:00:40 -0500
+Reporting-MTA: dns; students.niu.edu
+Arrival-Date: Tue, 09 Sep 2008 11:00:40 -0500
 
-    Original-Recipient: anon
-    Final-Recipient: anon
-    Action: failed
-    Status: 5.0.0
-    --1220976040-13870-students.niu.edu
-    Content-type: message/rfc822
+Original-Recipient: anon
+Final-Recipient: anon
+Action: failed
+Status: 5.0.0
+--1220976040-13870-students.niu.edu
+Content-type: message/rfc822
 
-    From: Hasslebot <hassle@hassleme.co.uk>
-    To: rbenyo@niu.edu
-    Subject: Don\'t forget to...
-    Message-ID: <b08207e35fe8a8f8f@hassleme.co.uk>
-    MIME-Version: 1.0
-    Content-Type: text/plain; charset=utf-8
-    Content-Transfer-Encoding: quoted-printable
-    Sender: HassleMe <hm@sandwich.ukcod.org.uk>
-    Date: Tue, 09 Sep 2008 17:00:24 +0100
-    X-Spam-Score: 0.00 () [Hold at 5.00] 
-    X-CanItPRO-Stream: anon redirected to 03_Aggressive
-    X-Scanned-By: CanIt (www . roaringpenguin . com) on 131.156.1.111
+From: Hasslebot <hassle@hassleme.co.uk>
+To: rbenyo@niu.edu
+Subject: Don\'t forget to...
+Message-ID: <b08207e35fe8a8f8f@hassleme.co.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Sender: HassleMe <hm@sandwich.ukcod.org.uk>
+Date: Tue, 09 Sep 2008 17:00:24 +0100
+X-Spam-Score: 0.00 () [Hold at 5.00] 
+X-CanItPRO-Stream: anon redirected to 03_Aggressive
+X-Scanned-By: CanIt (www . roaringpenguin . com) on 131.156.1.111
 
-    -- Message body has been omitted --
+-- Message body has been omitted --
 
-    --1220976040-13870-students.niu.edu--
-    ';
+--1220976040-13870-students.niu.edu--
+';
     expect_mail_outcome('deleted', $verp_bounce_email);
 
     # Hassle should no longer be in the set considered for emails
