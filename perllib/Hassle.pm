@@ -6,7 +6,7 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-# $Id: Hassle.pm,v 1.12 2009-04-29 11:57:27 louise Exp $
+# $Id: Hassle.pm,v 1.13 2009-04-29 12:01:20 louise Exp $
 #
 
 package Hassle;
@@ -26,7 +26,7 @@ use mySociety::Config;
 BEGIN {
     use Exporter ();
     @Hassle::ISA = qw(Exporter);
-    @Hassle::EXPORT = qw(&dbh &secret &sendmail &token &check_token &is_valid_email &active_hassles &delete_recipient &verp_envelope_sender);
+    @Hassle::EXPORT = qw(&dbh &secret &sendmail &token &check_token &is_valid_email &active_hassles &delete_recipient &verp_envelope_sender &get_bounced_address);
 }
 #our @EXPORT_OK;
 
