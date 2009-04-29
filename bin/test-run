@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.21 2009-04-28 13:45:32 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.22 2009-04-29 09:18:30 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -589,6 +589,29 @@ sub do_permanent_dsn_bounce_without_verp_no_email_test(){
     die 'No hassle for user where we could not figure out bounce recipient' unless ($hassle_output =~ /$bouncing_hassle/);
 } 
 #----------------------------------
+sub do_verp_bounce_test(){
+    
+    my $email = bounce_n(0);
+    my $test_hassle = 'Learn all about VERP';
+    
+    $wth->browser_get($base_url);
+    $wth->browser_check_contents("Set up a hassle now!");
+    $wth->browser_check_contents("This is a test site");
+   
+    $wth->browser_submit_form(form_name => 'createHassleForm',
+        fields => { freq => "3650", 
+                    what => $test_hassle,
+                    email => $email, 
+                    public => "true"},  
+        );
+    $wth->browser_check_contents("Now check your email!");
+    
+    # Shouldn't be considering sending hassles yet
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;
+    die 'Active hassle for unconfirmed user' if ($hassle_output =~ /$test_hassle/);
+    
+}
+#----------------------------------
 sub do_basic_signup_test(){
     
     my $test_hassle = 'run the test suite for Hassleme';
@@ -625,8 +648,12 @@ print "Testing permanent non DSN bounce - unsubscribe user...\n" if $verbose > 0
 do_permanent_bounce_without_verp_test();
 
 # Test the handling of a non-DSN bounce that we've classified as transient
-print "Testing transicent non DSN bounce - ignore...\n" if $verbose > 0;
+print "Testing transient non DSN bounce - ignore...\n" if $verbose > 0;
 do_transient_bounce_without_verp_test();
+
+# Test the end-to-end VERP bounce process
+print "Testing that VERP bounces get parsed successfully...\n" if $verbose > 0;
+do_verp_bounce_test();
 
 print "Checking no emails left at end...\n" if $verbose > 0;
 $wth->email_check_none_left();
