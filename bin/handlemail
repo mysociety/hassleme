@@ -9,7 +9,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: handlemail,v 1.4 2009-04-28 12:48:48 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: handlemail,v 1.5 2009-04-29 11:56:46 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -42,9 +42,9 @@ sub mark_as($%){
     close FILE; 
 }
 #----------------------
-sub handle_dsn_bounce($$){
+sub handle_dsn_bounce($$$){
 
-    my ($r, $data) = @_;
+    my ($r, $data, $bounced_address) = @_;
     my %attributes = %{$r};
     my $status = $attributes{status};
     if ($status !~ /^5\./ || $status eq '5.2.2'){
@@ -61,8 +61,8 @@ sub handle_dsn_bounce($$){
         
 }
 #----------------------
-sub handle_non_dsn_bounce($$){
-    my ($attributes, $data) = @_;
+sub handle_non_dsn_bounce($$$){
+    my ($attributes, $data, $bounced_address) = @_;
     my %attribute_hash = %{$attributes};
     if (!$attribute_hash{problem}){
         mark_as('unparsed', $data);
@@ -81,9 +81,9 @@ sub handle_non_dsn_bounce($$){
     
 }
 #----------------------
-sub handle_bounce($){
+sub handle_bounce($$){
 
-    my ($data) = @_;
+    my ($data, $bounced_address) = @_;
     my %data_hash = %{$data};
     my @lines = @{$data_hash{lines}};
 
@@ -93,12 +93,10 @@ sub handle_bounce($){
     }
 
     if ($r){
-        handle_dsn_bounce($r, \%data_hash);
+        handle_dsn_bounce($r, \%data_hash, $bounced_address);
     }else{
         my %attributes = mySociety::HandleMail::parse_bounce(\@lines);
-        
-        
-        handle_non_dsn_bounce(\%attributes, \%data_hash);
+        handle_non_dsn_bounce(\%attributes, \%data_hash, $bounced_address);
         
     }
     
@@ -109,14 +107,15 @@ sub handle_non_bounce_reply($){
     mark_as('ignored', $data);
 }
 #----------------------
-
 sub handle_incoming(){
     my %data = mySociety::HandleMail::get_message();
     
     if (!$data{is_bounce_message}) {
         handle_non_bounce_reply(\%data);
     }else{
-        handle_bounce(\%data);
+        my $bounce_recipient = mySociety::HandleMail::get_bounce_recipient($data{message});
+        my $bounced_address = get_bounced_address($bounce_recipient);
+        handle_bounce(\%data, $bounced_address);
     }
     exit(0);
    
