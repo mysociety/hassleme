@@ -7,7 +7,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: deal-with-bounce-backlog,v 1.1 2009-04-29 16:48:24 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: deal-with-bounce-backlog,v 1.2 2009-04-29 17:59:57 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -19,11 +19,10 @@ use lib "$FindBin::Bin/../../perllib";
 use mySociety::HandleMail;
 use HassleMail;
 
-@emails = mySociety::HandleMail::process_mailbox(HassleMail::MAIL_LOG_PREFIX . 'ignored');
-
-for my $data (@emails){
-    my %data_hash = %{$data};
-    print $data_hash{is_bounce_message};
+my @emails = mySociety::HandleMail::process_mailbox(HassleMail::MAIL_LOG_PREFIX . 'ignored');
+for my $ref (@emails){
+    my %data = %$ref;
+    print $data{is_bounce_message};
     # HassleMail::handle_incoming($data);
 }
-print 'done';
+print "done\n";
