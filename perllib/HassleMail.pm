@@ -6,7 +6,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org
 #
-# $Id: HassleMail.pm,v 1.3 2009-04-29 16:00:00 louise Exp $
+# $Id: HassleMail.pm,v 1.4 2009-04-30 16:45:56 louise Exp $
 #
 
 package HassleMail;
@@ -46,7 +46,7 @@ sub mark_deleted($$$){
     my ($recipient, $data, $bounced_address) = @_;
     my $email = $bounced_address || $recipient;
     if ($email){
-        delete_recipient($email);
+        # delete_recipient($email);
         mark_as('deleted', $data);
     }else{
         mark_as('unparsed', $data);
@@ -72,10 +72,11 @@ sub handle_non_dsn_bounce($$$){
         mark_as('unparsed', $data);
         return;
     }
-    if (mySociety::HandleMail::is_permanent($attribute_hash{problem})){
+    my $err_type = mySociety::HandleMail::error_type($attribute_hash{problem});
+    if ($err_type == mySociety::HandleMail::ERR_TYPE_PERMANENT){
         mark_deleted($attribute_hash{email_address}, $data, $bounced_address);
     }else{
-        mark_as('ignored', $data);
+        mark_as('ignored', $data);  
     }
 }
 #----------------------
