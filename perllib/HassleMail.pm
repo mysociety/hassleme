@@ -6,7 +6,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org
 #
-# $Id: HassleMail.pm,v 1.4 2009-04-30 16:45:56 louise Exp $
+# $Id: HassleMail.pm,v 1.5 2009-04-30 16:48:03 louise Exp $
 #
 
 package HassleMail;
@@ -46,7 +46,7 @@ sub mark_deleted($$$){
     my ($recipient, $data, $bounced_address) = @_;
     my $email = $bounced_address || $recipient;
     if ($email){
-        # delete_recipient($email);
+        delete_recipient($email);
         mark_as('deleted', $data);
     }else{
         mark_as('unparsed', $data);
