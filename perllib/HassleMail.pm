@@ -6,7 +6,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org
 #
-# $Id: HassleMail.pm,v 1.5 2009-04-30 16:48:03 louise Exp $
+# $Id: HassleMail.pm,v 1.6 2009-05-05 10:38:54 louise Exp $
 #
 
 package HassleMail;
@@ -85,15 +85,10 @@ sub handle_bounce($$){
     my %data_hash = %{$data};
     my @lines = @{$data_hash{lines}};
 
-    my $r = mySociety::HandleMail::parse_dsn_bounce(\@lines);
-    if (!$r){
-       $r = mySociety::HandleMail::parse_ill_formed_dsn_bounce(\@lines);
-    }
-
-    if ($r){
-        handle_dsn_bounce($r, \%data_hash, $bounced_address);
+    my %attributes = mySociety::HandleMail::parse_bounce(\@lines);
+    if (%attributes{is_dsn})
+        handle_dsn_bounce(\%attributes, \%data_hash, $bounced_address);
     }else{
-        my %attributes = mySociety::HandleMail::parse_bounce(\@lines);
         handle_non_dsn_bounce(\%attributes, \%data_hash, $bounced_address);    
     }
 }
