@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.10 2009-04-27 14:25:55 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.11 2009-05-05 16:51:30 louise Exp $';
 
 use strict;
 
@@ -101,13 +101,11 @@ This is a hassle to remind you to $what. So get to it!
 
  - - - - - - - 
 
-If HassleMe helps you live a slightly happier life, *please donate* to
-show your appreciation.
+If HassleMe helps you live a slightly happier life, *please donate* to show your appreciation.
 
 http://www.mysociety.org/donate
 
-HassleMe is run by a small non-profit called mySociety.org - check us
-out if you want to know more.
+HassleMe is run by a small non-profit called mySociety.org - check us out if you want to know more.
 
  - - - - - - - 
 

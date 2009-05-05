@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.21 2009-02-02 02:49:37 root Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.22 2009-05-05 16:51:31 louise Exp $';
 
 use strict;
 
@@ -312,22 +312,18 @@ while (my $q = new mySociety::CGIFast()) {
 
 Hello,
 
-Someone (hopefully you) has asked for this email address to be hassled
-roughly every $freq days to:
+Someone (hopefully you) has asked for this email address to be hassled roughly every $freq days to:
 
 $what_preview
 
 If you want to be hassled about this, please click on the link below:
     $confirmurl
 
-If your email program does not let you click on this link, just copy
-and paste it into your web browser and hit return.
+If your email program does not let you click on this link, just copy and paste it into your web browser and hit return.
 
-If you have changed your mind and don't want us to nag you, then do
-nothing - your message will expire and be deleted.
+If you have changed your mind and don't want us to nag you, then do nothing - your message will expire and be deleted.
 
-Any other questions? Please email team\@hassleme.co.uk and we'll get
-back to you as soon as we can.
+Any other questions? Please email team\@hassleme.co.uk and we'll get back to you as soon as we can.
 
 Thanks!
 

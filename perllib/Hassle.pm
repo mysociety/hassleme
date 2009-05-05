@@ -6,7 +6,7 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-# $Id: Hassle.pm,v 1.13 2009-04-29 12:01:20 louise Exp $
+# $Id: Hassle.pm,v 1.14 2009-05-05 16:51:30 louise Exp $
 #
 
 package Hassle;
@@ -119,7 +119,7 @@ EOF
                         int(rand(0xffffffff)), int(rand(0xffffffff)));
 
     my $mail = mySociety::Email::construct_email({
-        _body_ => MIME::QuotedPrint::encode_qp($text),
+        _unwrapped_body_ => $text,
     	From => ['hassle@hassleme.co.uk', 'HassleBot'],
     	Subject => $subject,
     	To => $to,
