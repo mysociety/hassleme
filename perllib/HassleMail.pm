@@ -6,7 +6,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org
 #
-# $Id: HassleMail.pm,v 1.8 2009-05-05 10:41:34 louise Exp $
+# $Id: HassleMail.pm,v 1.9 2009-05-05 13:04:47 louise Exp $
 #
 
 package HassleMail;
@@ -42,11 +42,13 @@ sub mark_as($%){
     close FILE; 
 }
 #----------------------
-sub mark_deleted($$$){
-    my ($recipient, $data, $bounced_address) = @_;
+sub mark_deleted($$$$){
+    my ($recipient, $data, $bounced_address, $verbose) = @_;
     my $email = $bounced_address || $recipient;
     if ($email){
         delete_recipient($email);
+        my %data_hash = %{$data};
+        print "deleting $email\n" if $verbose;
         mark_as('deleted', $data);
     }else{
         mark_as('unparsed', $data);
@@ -54,19 +56,19 @@ sub mark_deleted($$$){
 }
 
 #----------------------
-sub handle_dsn_bounce($$$){
-    my ($r, $data, $bounced_address) = @_;
+sub handle_dsn_bounce($$$$){
+    my ($r, $data, $bounced_address, $verbose) = @_;
     my %attributes = %{$r};
     my $status = $attributes{status};
     if ($status !~ /^5\./ || $status eq '5.2.2'){
         mark_as('ignored', $data);
     }else{
-        mark_deleted($attributes{recipient}, $data, $bounced_address);
+        mark_deleted($attributes{recipient}, $data, $bounced_address, $verbose);
     }
 }
 #----------------------
-sub handle_non_dsn_bounce($$$){
-    my ($attributes, $data, $bounced_address) = @_;
+sub handle_non_dsn_bounce($$$$){
+    my ($attributes, $data, $bounced_address, $verbose) = @_;
     my %attribute_hash = %{$attributes};
     if (!$attribute_hash{problem}){
         mark_as('unparsed', $data);
@@ -74,22 +76,22 @@ sub handle_non_dsn_bounce($$$){
     }
     my $err_type = mySociety::HandleMail::error_type($attribute_hash{problem});
     if ($err_type == mySociety::HandleMail::ERR_TYPE_PERMANENT){
-        mark_deleted($attribute_hash{email_address}, $data, $bounced_address);
+        mark_deleted($attribute_hash{email_address}, $data, $bounced_address, $verbose);
     }else{
         mark_as('ignored', $data);  
     }
 }
 #----------------------
-sub handle_bounce($$){
-    my ($data, $bounced_address) = @_;
+sub handle_bounce($$$){
+    my ($data, $bounced_address, $verbose) = @_;
     my %data_hash = %{$data};
     my @lines = @{$data_hash{lines}};
 
     my %attributes = mySociety::HandleMail::parse_bounce(\@lines);
     if ($attributes{is_dsn}){
-        handle_dsn_bounce(\%attributes, \%data_hash, $bounced_address);
+        handle_dsn_bounce(\%attributes, \%data_hash, $bounced_address, $verbose);
     }else{
-        handle_non_dsn_bounce(\%attributes, \%data_hash, $bounced_address);    
+        handle_non_dsn_bounce(\%attributes, \%data_hash, $bounced_address, $verbose);    
     }
 }
 #----------------------
@@ -98,8 +100,8 @@ sub handle_non_bounce_reply($){
     mark_as('ignored', $data);
 }
 #----------------------
-sub handle_incoming($){
-    my ($data) = @_;
+sub handle_incoming($$){
+    my ($data, $verbose) = @_;
     my %data = %{$data};
     
     if (!$data{is_bounce_message}) {
@@ -107,7 +109,7 @@ sub handle_incoming($){
     }else{
         my $bounce_recipient = mySociety::HandleMail::get_bounce_recipient($data{message});
         my $bounced_address = get_bounced_address($bounce_recipient);
-        handle_bounce(\%data, $bounced_address);
+        handle_bounce(\%data, $bounced_address, $verbose);
     }
 }
 #----------------------
