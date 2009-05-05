@@ -1,0 +1,76 @@
+#!/usr/bin/perl -w -I../../perllib
+#
+# mark-deleted:
+# Go through a file of email addresses and mark each one as deleted in HassleMe
+# 
+# Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
+# Email: louise@mysociety.org; WWW: http://www.mysociety.org/
+
+my $rcsid = ''; $rcsid .= '$Id: mark-deleted,v 1.1 2009-05-05 15:41:57 louise Exp $';
+
+use strict;
+require 5.8.0;
+use Getopt::Long;
+# Horrible boilerplate to set up appropriate library paths.
+use FindBin;
+use lib "$FindBin::Bin/../perllib";
+use lib "$FindBin::Bin/../../perllib";
+use mySociety::Config;
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../conf/general");
+}
+use Hassle;
+
+our $verbose=0;
+our $help;
+
+sub help{
+print <<END
+
+Usage: mark-deleted [OPTION] FILE
+
+Options are
+    --verbose=n   Choose 0 (no output), 1 (debugging output)
+    -- help
+END
+}
+if (!GetOptions(
+        'verbose=i' =>  \$verbose,
+        'help' =>               \$help,
+      
+    )) {
+    help();
+    exit(1);
+}
+if ($help) {
+    help();
+    exit(0);
+}
+if (scalar(@ARGV) == 0) {
+    help();
+    exit(1);
+}
+
+sub delete_email($){
+    my ($email_address) = @_;
+    my $is_valid = mySociety::EmailUtil::is_valid_email($email_address);
+    if ($is_valid){
+        delete_recipient($email_address);
+        print "marked $email_address as deleted\n";
+    }else{
+        print "$email_address: not a valid address\n";
+    }
+    sleep(1);
+}
+
+open(FP, shift) or die $!;
+my $line;
+my @lines;
+while ($line = <FP>) {
+    push(@lines, $line);
+}
+
+for my $email_address (@lines){
+    chomp $email_address;
+    delete_email($email_address);
+}
