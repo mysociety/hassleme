@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.26 2009-05-06 17:19:16 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.27 2009-05-06 17:21:46 louise Exp $';
 
 use strict;
 require 5.8.0;
@@ -43,12 +43,10 @@ END
 # Parse command line
 our $verbose = 0; # currently 3 levels: 0, 1 and 2
 our $help;
-our $multispawn = 1;
 
 if (!GetOptions(
         'verbose=i' =>  \$verbose,
         'help' =>               \$help,
-        'multispawn=i' => \$multispawn,
     )) {
     help();
     exit(1);
