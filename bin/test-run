@@ -4,7 +4,7 @@
 # Test harness for Hassleme
 # 
 # Requires:
-# * ../general/conf file set up for HassleMe and matching the below requirements
+# * ../conf/general file set up for HassleMe and matching the below requirements
 # * a database with name ending "_testharness"; this script will drop and remake the
 #   database, so make sure it is never used for anything important
 # * email addresses (email_n below) configured to pipe to ./test-mailin with fast
@@ -12,7 +12,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.25 2009-04-29 14:13:58 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.26 2009-05-06 17:19:16 louise Exp $';
 
 use strict;
 require 5.8.0;
