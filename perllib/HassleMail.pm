@@ -6,7 +6,7 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org
 #
-# $Id: HassleMail.pm,v 1.10 2009-05-06 08:33:51 louise Exp $
+# $Id: HassleMail.pm,v 1.11 2009-05-06 15:21:40 louise Exp $
 #
 
 package HassleMail;
@@ -30,16 +30,10 @@ use mySociety::HandleMail;
 # messages being generated (only in response to non-bounce input, obviously).
 mySociety::SystemMisc::log_to_stderr(0);
 
-use constant MAIL_LOG_PREFIX => mySociety::Config::get('HM_MAIL_LOG_PREFIX'); 
-
 #----------------------
 sub mark_as($%){
     my ($destination, $data) = @_;
-    my %data = %{$data};
-    my $mail = join("\n", @{$data{lines}});
-    open FILE, ">>", MAIL_LOG_PREFIX . $destination;
-    print FILE $mail;
-    close FILE; 
+    mySociety::HandleMail::mark_as($destination, $data, mySociety::Config::get('HM_MAIL_LOG_PREFIX'));
 }
 #----------------------
 sub mark_deleted($$$$){
