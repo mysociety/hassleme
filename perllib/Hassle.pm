@@ -6,7 +6,7 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-# $Id: Hassle.pm,v 1.14 2009-05-05 16:51:30 louise Exp $
+# $Id: Hassle.pm,v 1.15 2009-05-06 08:33:51 louise Exp $
 #
 
 package Hassle;
@@ -130,9 +130,9 @@ EOF
     if ($result == mySociety::EmailUtil::EMAIL_SUCCESS) {
         
     } elsif ($result == mySociety::EmailUtil::EMAIL_SOFT_ERROR) {
-        die "soft error delivering message by email to $to";
+        print "soft error delivering message by email to $to";
     } else {
-        die "hard error delivering message by email to $to";
+        print "hard error delivering message by email to $to";
     }
 }
 
