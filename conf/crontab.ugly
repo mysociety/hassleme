@@ -4,14 +4,14 @@
 # Copyright (c) 2008 UK Citizens Online Democracy. All rights reserved.
 # Email: francis@mysociety.org. WWW: http://www.mysociety.org/
 #
-# $Id: crontab.ugly,v 1.3 2009-04-13 22:52:10 keith Exp $
+# $Id: crontab.ugly,v 1.4 2009-05-06 12:01:27 louise Exp $
 
 PATH=/usr/local/bin:/usr/bin:/bin
 MAILTO=team@mysociety.org
 
 ## These scripts run on all machines, as they write to filesystem
 # XXX I think that 5 times an hour must be same as OPTION_NHASSLERUNS in conf/general
-#0 9,11,13,15,17 * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/mysociety/hm/bin/send-hassles
+0 9,11,13,15,17 * * * !!(*= $user *)!! /data/vhost/!!(*= $vhost *)!!/mysociety/hm/bin/send-hassles
 
 
 
