@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.22 2009-05-05 16:51:31 louise Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.23 2009-09-24 16:16:54 matthew Exp $';
 
 use strict;
 
@@ -205,7 +205,7 @@ EOF
             piwik_log(piwik_action_name, piwik_idsite, piwik_url);
             //-->
             </script>
-            <noscript><img src="http://piwik.mysociety.org/piwik.php?i=1" style="border:0" alt=""></noscript>
+            <noscript><img src="http://piwik.mysociety.org/piwik.php?idsite=10" style="border:0" alt=""></noscript>
             <!-- /Piwik -->
 EOF
     }
