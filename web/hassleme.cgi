@@ -7,7 +7,7 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.23 2009-09-24 16:16:54 matthew Exp $';
+my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.24 2010-04-30 10:50:36 louise Exp $';
 
 use strict;
 
@@ -192,21 +192,18 @@ EOF
 
     if ($ENV{'SERVER_NAME'} eq 'www.hassleme.co.uk') {
         print <<EOF;
-            <!-- Piwik -->
-            <script type="text/javascript">
-            var pkBaseURL = (("https:" == document.location.protocol) ? "https://piwik.mysociety.org/" : "http://piwik.mysociety.org/");
-            document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-            </script>
-            <script type="text/javascript">
-            <!--
-            piwik_action_name = '';
-            piwik_idsite = 10;
-            piwik_url = pkBaseURL + "piwik.php";
-            piwik_log(piwik_action_name, piwik_idsite, piwik_url);
-            //-->
-            </script>
-            <noscript><img src="http://piwik.mysociety.org/piwik.php?idsite=10" style="border:0" alt=""></noscript>
-            <!-- /Piwik -->
+           <!-- Piwik -->
+           <script type="text/javascript">
+           var pkBaseURL = (("https:" == document.location.protocol) ? "https://piwik.mysociety.org/" : "http://piwik.mysociety.org/");
+           document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+           </script><script type="text/javascript">
+           try {
+           var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 10);
+           piwikTracker.trackPageView();
+           piwikTracker.enableLinkTracking();
+           } catch( err ) {}
+           </script><noscript><p><img src="http://piwik.mysociety.org/piwik.php?idsite=10" style="border:0" alt=""/></p></noscript>
+           <!-- End Piwik Tag -->
 EOF
     }
 
