@@ -4,10 +4,10 @@
 # Copyright (c) 2008 UK Citizens Online Democracy. All rights reserved.
 # Email: francis@mysociety.org. WWW: http://www.mysociety.org/
 #
-# $Id: crontab.ugly,v 1.4 2009-05-06 12:01:27 louise Exp $
+# $Id: crontab.ugly,v 1.5 2010-10-08 14:41:04 matthew Exp $
 
 PATH=/usr/local/bin:/usr/bin:/bin
-MAILTO=team@mysociety.org
+MAILTO=team@!!(*= $vhost_rest *)!!
 
 ## These scripts run on all machines, as they write to filesystem
 # XXX I think that 5 times an hour must be same as OPTION_NHASSLERUNS in conf/general
