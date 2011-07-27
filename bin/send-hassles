@@ -7,13 +7,11 @@
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
 
-my $rcsid = ''; $rcsid .= '$Id: send-hassles,v 1.11 2009-05-05 16:51:30 louise Exp $';
-
 use strict;
 
 use FindBin;
 use lib "$FindBin::Bin/../perllib";
-use lib "$FindBin::Bin/../../perllib";
+use lib "$FindBin::Bin/../commonlib/perllib";
 
 use DBI;
 use DBD::Pg;

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w -I../perllib -I../../perllib
+#!/usr/bin/perl -w -I../perllib -I../commonlib/perllib
 #
 # hassleme.cgi:
 # Website for hassleme.
@@ -6,8 +6,6 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-
-my $rcsid = ''; $rcsid .= '$Id: hassleme.cgi,v 1.24 2010-04-30 10:50:36 louise Exp $';
 
 use strict;
 

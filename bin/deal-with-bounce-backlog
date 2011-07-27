@@ -7,15 +7,13 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: deal-with-bounce-backlog,v 1.4 2009-05-05 13:04:46 louise Exp $';
-
 use strict;
 require 5.8.0;
 
 # Horrible boilerplate to set up appropriate library paths.
 use FindBin;
 use lib "$FindBin::Bin/../perllib";
-use lib "$FindBin::Bin/../../perllib";
+use lib "$FindBin::Bin/../commonlib/perllib";
 use mySociety::HandleMail;
 use HassleMail;
 use Getopt::Long;

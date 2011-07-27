@@ -5,8 +5,6 @@
 -- Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 -- Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 --
--- $Id: schema.sql,v 1.2 2009-04-22 15:46:38 louise Exp $
---
 
 create table secret (
     id integer not null default(0) check(id = 0),

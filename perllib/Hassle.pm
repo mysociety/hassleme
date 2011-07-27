@@ -6,8 +6,6 @@
 # Copyright (c) 2005 Chris Lightfoot. All rights reserved.
 # Email: chris@ex-parrot.com; WWW: http://www.ex-parrot.com/~chris/
 #
-# $Id: Hassle.pm,v 1.17 2009-05-06 09:00:18 louise Exp $
-#
 
 package Hassle;
 

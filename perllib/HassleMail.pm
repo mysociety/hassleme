@@ -6,8 +6,6 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org
 #
-# $Id: HassleMail.pm,v 1.11 2009-05-06 15:21:40 louise Exp $
-#
 
 package HassleMail;
 
@@ -17,7 +15,7 @@ require 5.8.0;
 # Horrible boilerplate to set up appropriate library paths.
 use FindBin;
 use lib "$FindBin::Bin/../perllib";
-use lib "$FindBin::Bin/../../perllib";
+use lib "$FindBin::Bin/../commonlib/perllib";
 use mySociety::Config;
 use Hassle;
 

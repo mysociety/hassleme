@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w -I../../perllib
+#!/usr/bin/perl -w
 #
 # test-run:
 # Test harness for Hassleme
@@ -12,15 +12,13 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: test-run,v 1.27 2009-05-06 17:21:46 louise Exp $';
-
 use strict;
 require 5.8.0;
 
 use Getopt::Long;
 use FindBin;
 use lib "$FindBin::Bin/../perllib";
-use lib "$FindBin::Bin/../../perllib";
+use lib "$FindBin::Bin/../commonlib/perllib";
 use Carp qw(verbose);
 BEGIN {
     use mySociety::Config;

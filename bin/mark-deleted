@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w -I../../perllib
+#!/usr/bin/perl -w
 #
 # mark-deleted:
 # Go through a file of email addresses and mark each one as deleted in HassleMe
@@ -6,15 +6,13 @@
 # Copyright (c) 2009 UK Citizens Online Democracy. All rights reserved.
 # Email: louise@mysociety.org; WWW: http://www.mysociety.org/
 
-my $rcsid = ''; $rcsid .= '$Id: mark-deleted,v 1.1 2009-05-05 15:41:57 louise Exp $';
-
 use strict;
 require 5.8.0;
 use Getopt::Long;
 # Horrible boilerplate to set up appropriate library paths.
 use FindBin;
 use lib "$FindBin::Bin/../perllib";
-use lib "$FindBin::Bin/../../perllib";
+use lib "$FindBin::Bin/../commonlib/perllib";
 use mySociety::Config;
 BEGIN {
     mySociety::Config::set_file("$FindBin::Bin/../conf/general");
