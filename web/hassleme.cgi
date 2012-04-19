@@ -573,9 +573,8 @@ href="http://www.placeopedia.com/">Placeopedia.com</a>.</dd>
 EOF
 
     } elsif ($fn eq 'privacy') {
-                hassle_header($q,'Privacy');
+                hassle_header($q,'Privacy, cookies, and third party services');
                 print <<EOF;
-                <h2>Privacy, cookies, and third party services</h2>
 
                 <p><strong>Our use of your data, cookies, and external services: what you should know, and how to opt out if you want to.</strong></p>
 
