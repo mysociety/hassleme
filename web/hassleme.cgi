@@ -53,7 +53,7 @@ sub hassle_header {
             $q->a({href=>'http://www.hassleme.co.uk'}, "www.hassleme.co.uk")
         );
     }
-   
+
     print $q->h1($q->a({href=>'/'},"HassleMe"),
 #                 $q->span({-id=>'betaTest'},
 #                        'Beta Test'),
@@ -190,18 +190,21 @@ EOF
 
     if ($ENV{'SERVER_NAME'} eq 'www.hassleme.co.uk') {
         print <<EOF;
-           <!-- Piwik -->
+           <!-- Google Analytics -->
            <script type="text/javascript">
-           var pkBaseURL = (("https:" == document.location.protocol) ? "https://piwik.mysociety.org/" : "http://piwik.mysociety.org/");
-           document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-           </script><script type="text/javascript">
-           try {
-           var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 10);
-           piwikTracker.trackPageView();
-           piwikTracker.enableLinkTracking();
-           } catch( err ) {}
-           </script><noscript><p><img src="http://piwik.mysociety.org/piwik.php?idsite=10" style="border:0" alt=""/></p></noscript>
-           <!-- End Piwik Tag -->
+
+             var _gaq = _gaq || [];
+             _gaq.push(['_setAccount', 'UA-660910-8']);
+             _gaq.push(['_trackPageview']);
+
+             (function() {
+               var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+               ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+               var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+             })();
+
+           </script>
+            <!-- End Google Analytics Tag -->
 EOF
     }
 
@@ -283,7 +286,7 @@ while (my $q = new mySociety::CGIFast()) {
                 if (length($what) > $preview_length) {
                     $what_preview = substr($what_preview, 0, $preview_length - 3) . '...';
                 }
-                
+
                 my $t0 = time();
                 dbh()->do('
                         insert into hassle (id, frequency, what, public, ipaddr)
@@ -356,7 +359,7 @@ EOF
         }
 
         $q->param('f', 1);
-    
+
         if (@errors) {
             hassle_header($q);
             print $q->h3("Sorry, that didn't work."),
@@ -395,7 +398,7 @@ If you like this service, <a href="http://www.mysociety.org/donate/">please dona
 <p><a href="http://www.mysociety.org/donate/"><img src="/waving.jpg" alt=""></a></p>
 <p>
 We're a registered non-profit running in the UK, and we need your help
-to run services like this. For more info see 
+to run services like this. For more info see
 <a href="http://www.mysociety.org">http://www.mysociety.org</a>.
 </p>
 </div>
@@ -569,6 +572,11 @@ href="http://www.placeopedia.com/">Placeopedia.com</a>.</dd>
 
 EOF
 
+    } elsif ($fn eq 'faq') {
+                hassle_header($q,'Privacy');
+                print <<EOF;
+Some privacy text
+EOF
     }
     hassle_footer($q);
 }
