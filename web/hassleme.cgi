@@ -214,7 +214,7 @@ while (my $q = new mySociety::CGIFast()) {
 #    $q->autoEscape(0);
     my $fn = lc($q->param('fn'));
     $fn ||= 'home';
-    my %fns = map { $_ => 1 } qw(home confirm unsubscribe faq hassles);
+    my %fns = map { $_ => 1 } qw(home confirm unsubscribe faq hassles privacy);
     $fn = 'home' if (!exists($fns{$fn}));
 
     my $created = undef;
