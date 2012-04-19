@@ -575,7 +575,7 @@ EOF
     } elsif ($fn eq 'privacy') {
                 hassle_header($q,'Privacy');
                 print <<EOF;
-                <h1>Privacy, cookies, and third party services</h1>
+                <h2>Privacy, cookies, and third party services</h2>
 
                 <p><strong>Our use of your data, cookies, and external services: what you should know, and how to opt out if you want to.</strong></p>
 
