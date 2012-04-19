@@ -179,11 +179,10 @@ sub hassle_footer {
 <p id="footer">
 <a href="http://digg.com/software/HassleMe_nags_you_because_your_mother_can_t_do_everything">Digg this!</a> |
 <a href="/faq">FAQ</a> |
+<a href="/privacy">Privacy and cookies</a> |
 Derived from <a href="http://www.mysociety.org/2005/03/17/the-management-power-of-evil/">Hasslebot</a>, a
 <a href="http://www.mysociety.org/">mySociety</a> tool that reminds us to post
 things on our <a href="http://www.mysociety.org/blog/">blog</a><br>
-Hosted and supported by
-<a href="http://www.mythic-beasts.com/">Mythic Beasts Ltd</a>
 </p>
 
 EOF
