@@ -572,7 +572,7 @@ href="http://www.placeopedia.com/">Placeopedia.com</a>.</dd>
 
 EOF
 
-    } elsif ($fn eq 'faq') {
+    } elsif ($fn eq 'privacy') {
                 hassle_header($q,'Privacy');
                 print <<EOF;
 Some privacy text
