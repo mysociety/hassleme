@@ -78,7 +78,7 @@ sub get_bounced_address($){
 
 Construct a VERP envelope sender for an email to RECIPIENT
 
-=cut 
+=cut
 sub verp_envelope_sender($){
     my ($recipient) = @_;
     # strip whitespace
@@ -90,7 +90,7 @@ sub verp_envelope_sender($){
     return $envelope_sender
 }
 
-=item sendmail RECIPIENT SUBJECT TEXT 
+=item sendmail RECIPIENT SUBJECT TEXT
 
 Send an email to RECIPIENT with the given SUBJECT and TEXT. Subject and body
 should be UTF-8 strings.
@@ -102,7 +102,7 @@ sub sendmail ($$$) {
     # Add a signature to the body.
     $weburl = mySociety::Config::get('WEBURL');
     $text .= <<EOF;
--- 
+--
 $weburl/
 EOF
 
@@ -121,15 +121,15 @@ EOF
 
     my $mail = mySociety::Email::construct_email({
         _unwrapped_body_ => $text,
-    	From => ['hassle@hassleme.co.uk', 'HassleBot'],
-    	Subject => $subject,
-    	To => $to,
-    	'Message-ID' => $msgid,
+        From => ['hassle@hassleme.co.uk', 'HassleBot'],
+        Subject => $subject,
+        To => $to,
+        'Message-ID' => $msgid,
     });
-  
+
     my $result = mySociety::EmailUtil::send_email($mail, $sender, $to);
     if ($result == mySociety::EmailUtil::EMAIL_SUCCESS) {
-        
+
     } elsif ($result == mySociety::EmailUtil::EMAIL_SOFT_ERROR) {
         die "soft error delivering message by email to $to";
     } else {
@@ -188,7 +188,7 @@ sub active_hassles(){
                     from hassle, recipient
                     where hassle.id = recipient.hassle_id
                         and recipient.confirmed
-                        and not recipient.deleted 
+                        and not recipient.deleted
                     group by hassle.id, hassle.what, hassle.frequency,
                         hassle.whencreated
                     having count(recipient) > 0');
@@ -208,6 +208,15 @@ sub is_valid_email ($) {
     my $is_valid = mySociety::EmailUtil::is_valid_email($addr);
 
     if ($is_valid) {
+        my $s = dbh()->prepare('select email from no_send_list');
+
+        my $no_send_addresses = $s->execute();
+        while (my ($no_send_address) = $no_send_addresses->fetchrow_array()) {
+            if ($addr eq $no_send_address){
+                return "Sorry, we're not able to send email to '$addr'";
+            }
+        }
+
         my ($domain) = ($addr =~ /@(.+)/);
         our $R;
         if (!$R) {
@@ -218,7 +227,7 @@ sub is_valid_email ($) {
         }
         my $resp = $R->send($domain, 'MX');
         if(defined($resp) && $resp->header()->ancount() == 0 ){
-            $resp = $R->send($domain, 'A'); 
+            $resp = $R->send($domain, 'A');
         }
         if (!defined($resp)     # timeout, probably
             || $resp->header()->ancount() > 0) {
