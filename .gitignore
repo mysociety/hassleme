@@ -1,2 +1,3 @@
 /conf/general
 /conf/general.deployed
+bin/log_mailbox
