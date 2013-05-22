@@ -678,7 +678,7 @@ sub do_no_send_list_test(){
                     email => $email,
                     public => "true"},
         );
-    $wth->browser_check_contents("Sorry, we're not able to send email to '$email'");
+    $wth->browser_check_contents("Sorry, we&#39;re not able to send email to &#39;$email&#39;");
 
 }
 #----------------------------------
