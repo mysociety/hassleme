@@ -210,8 +210,8 @@ sub is_valid_email ($) {
     if ($is_valid) {
         my $s = dbh()->prepare('select email from no_send_list');
 
-        my $no_send_addresses = $s->execute();
-        while (my ($no_send_address) = $no_send_addresses->fetchrow_array()) {
+        $s->execute();
+        while (my ($no_send_address) = $s->fetchrow_array()) {
             if ($addr eq $no_send_address){
                 return "Sorry, we're not able to send email to '$addr'";
             }
