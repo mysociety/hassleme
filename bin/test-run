@@ -2,7 +2,7 @@
 #
 # test-run:
 # Test harness for Hassleme
-# 
+#
 # Requires:
 # * ../conf/general file set up for HassleMe and matching the below requirements
 # * a database with name ending "_testharness"; this script will drop and remake the
@@ -73,15 +73,15 @@ sub signup_user($$){
     $wth->browser_get($base_url);
     $wth->browser_check_contents("Set up a hassle now!");
     $wth->browser_check_contents("This is a test site");
-   
+
     $wth->browser_submit_form(form_name => 'createHassleForm',
-        fields => { freq => "3650", 
+        fields => { freq => "3650",
                     what => $test_hassle,
-                    email => $email, 
-                    public => "true"},  
+                    email => $email,
+                    public => "true"},
         );
     $wth->browser_check_contents("Now check your email!");
-    
+
     # Shouldn't be considering sending hassles yet
     my $hassle_output = `./send-hassles --verbose=1 2>&1`;
     die 'Active hassle for unconfirmed user' if ($hassle_output =~ /$test_hassle/);
@@ -93,7 +93,7 @@ sub signup_user($$){
     $wth->email_check_url($confirmation_url);
     print "Confirmation URL: " . $confirmation_url . "\n" if $verbose > 1;
     $wth->browser_get($confirmation_url);
-    $wth->browser_check_contents("Well done - we'll now hassle you as per your request."); 
+    $wth->browser_check_contents("Well done - we'll now hassle you as per your request.");
     # Hassle should now be in the set considered for emails
     $hassle_output = `./send-hassles --verbose=1 2>&1`;
     die 'No active hassle for confirmed user' unless ($hassle_output =~ /$test_hassle/);
@@ -108,14 +108,14 @@ sub call_handlemail($) {
     $wr = new IO::Handle();
     my $p = new IO::Pipe($rd, $wr);
     my ($p2, $pid) = mySociety::TempFiles::pipe_via("./handlemail", $wr);
- 
+
     $p2->print($content);
-    $p2->close(); 
+    $p2->close();
     waitpid($pid, 0);
 }
 #----------------------------------
 sub check_mail_log($$){
-   
+
     my ($mail_log, $expected_contents) = @_;
     open FILE, "<", mySociety::Config::get('HM_MAIL_LOG_PREFIX') . $mail_log;
     my @lines = ();
@@ -164,9 +164,9 @@ Lines: 104
 
 ------=neXtPaRt_1221041185
 Content-Type: multipart/report; report-type=delivery-status;
-	boundary="9B095B5ADSN=_01C90E572A9958EA00031445newexchangemail."
+    boundary="9B095B5ADSN=_01C90E572A9958EA00031445newexchangemail."
 
-This is a MIME-formatted message.  
+This is a MIME-formatted message.
 Portions of this message may be unreadable without a MIME-capable mail program.
 
 --9B095B5ADSN=_01C90E572A9958EA00031445newexchangemail.
@@ -197,7 +197,7 @@ Will-Retry-Until: Mon, 26 Mar 2001 03:42:45 +0100
 Content-Type: message/rfc822
 From: Hasslebot <hassle@hassleme.co.uk>
 To: ' . email_n(3) . '
-Subject: Don\'t forget to... 
+Subject: Don\'t forget to...
 Message-ID: <5110b2dfe097fca2f@hassleme.co.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -228,13 +228,13 @@ Disclaimer
 }
 #----------------------------------
 sub do_non_bounce_reply_without_verp_test(){
-    
+
     my $non_bouncing_hassle = 'get out of the office more';
     signup_user(email_n(2), $non_bouncing_hassle);
     my $non_bounce_email = 'Return-path: <' . email_n(2) . '>
 Envelope-to: hm-testharness@sandwich.ukcod.org.uk
 Delivery-date: Tue, 09 Sep 2008 16:25:52 +0100
-X-IronPort-AV: E=Sophos;i="4.32,366,1217822400"; 
+X-IronPort-AV: E=Sophos;i="4.32,366,1217822400";
    d="scan\'208,217";a="1201752"
 Subject: I am out of the office.
 From: me <' . email_n(2) . '>
@@ -244,8 +244,8 @@ Date: Tue, 9 Sep 2008 11:25:37 -0400
 X-MIMETrack: Serialize by Router on DRNotes1/NY/US/KSFHH(Release 7.0.2FP2 HF144|July 27, 2007) at
  09/09/2008 11:25:39 AM
 MIME-Version: 1.0
-Content-type: multipart/alternative; 
-	Boundary="0__=0ABBFE2CDFC738E48f9e8a93df938690918c0ABBFE2CDFC738E4"
+Content-type: multipart/alternative;
+    Boundary="0__=0ABBFE2CDFC738E48f9e8a93df938690918c0ABBFE2CDFC738E4"
 Content-Disposition: inline
 Status: O
 Content-Length: 602
@@ -273,12 +273,12 @@ I will respond to your message when I return.</body></html>
     expect_mail_outcome('ignored', $non_bounce_email);
 
     # Hassle should still be in the set considered for emails
-    my $hassle_output = `./send-hassles --verbose=1 2>&1`;    
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;
     die 'Inactive hassle for user following non bounce mail' unless ($hassle_output =~ /$non_bouncing_hassle/);
 }
 #----------------------------------
 sub do_permanent_dsn_bounce_without_verp_test(){
-    
+
     my $bouncing_hassle = 'keep my email account from being shut down';
     signup_user(email_n(1), $bouncing_hassle);
     my $bounce_email = 'Return-path: <>
@@ -289,7 +289,7 @@ To: hm-testharness@sandwich.ukcod.org.uk
 Date: Tue, 9 Sep 2008 17:02:23 +0100
 MIME-Version: 1.0
 Content-Type: multipart/report; report-type=delivery-status;
-	boundary="9B095B5ADSN=_01C8F669DA6E489E0002048Dsmtp.yoo.com"
+    boundary="9B095B5ADSN=_01C8F669DA6E489E0002048Dsmtp.yoo.com"
 X-DSNContext: 335a7efd - 4523 - 00000001 - 80040546
 Message-ID: <8T9vLehr2000166ee@smtp.yoo.com>
 Subject: Delivery Status Notification (Failure)
@@ -297,7 +297,7 @@ Status: O
 Content-Length: 2370
 Lines: 76
 
-This is a MIME-formatted message.  
+This is a MIME-formatted message.
 Portions of this message may be unreadable without a MIME-capable mail program.
 
 --9B095B5ADSN=_01C8F669DA6E489E0002048Dsmtp.yoo.com
@@ -327,7 +327,7 @@ Content-Type: message/rfc822
 X-EMS-Archived: 1160
 From: Hasslebot <hassle@hassleme.co.uk>
 To: ' . email_n(1) . '
-Subject: Don\'t forget to... 
+Subject: Don\'t forget to...
 Message-ID: <6fb670547a7e878cf@hassleme.co.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -339,18 +339,18 @@ X-OriginalArrivalTime: 09 Sep 2008 16:02:22.0775 (UTC) FILETIME=[71EFFC70:01C912
 
 Message content
 
---9B095B5ADSN=_01C8F669DA6E489E0002048Dsmtp.yoo.com--    
+--9B095B5ADSN=_01C8F669DA6E489E0002048Dsmtp.yoo.com--
 ';
 
     expect_mail_outcome('deleted', $bounce_email);
 
     # Hassle should no longer be in the set considered for emails
-    my $hassle_output = `./send-hassles --verbose=1 2>&1`;    
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;
     die 'Active hassle for deleted user' if ($hassle_output =~ /$bouncing_hassle/);
 }
 #----------------------------------
 sub do_unparsable_bounce_without_verp_test(){
-    
+
     my $bouncing_hassle = 'write a cool bounce generator';
     signup_user(email_n(5), $bouncing_hassle);
     my $unparsable_bounce_email = 'Return-path: <>
@@ -377,7 +377,7 @@ Message-ID: <3e5992620809120304w71861aco@mail.gmail.com>
 Date: Fri, 12 Sep 2008 03:04:07 -0700
 From: anon@gmail.com
 To: hm@sandwich.ukcod.org.uk
-Subject: [AWAY NOTICE] 
+Subject: [AWAY NOTICE]
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
@@ -390,11 +390,11 @@ Lines: 22
 
 Hello. I have written my own bounce generator. It is completely unstandard.
 ';
-    
+
     expect_mail_outcome('unparsed', $unparsable_bounce_email);
 
     # Hassle should still be in the set considered for hassles
-    my $hassle_output = `./send-hassles --verbose=1 2>&1`;    
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;
     die 'No hassle where we could not parse the bounce' unless ($hassle_output =~ /$bouncing_hassle/);
 }
 #----------------------------------
@@ -443,7 +443,7 @@ Date: Thu, 02 Apr 2009 16:13:19 +0100
 
 Message content
 ';
-    
+
     expect_mail_outcome('ignored', $transient_bounce_email);
 
     # Hassle should still be in the set considered for emails
@@ -452,8 +452,8 @@ Message content
 }
 #----------------------------------
 sub do_permanent_bounce_without_verp_test(){
-    
-    my $bouncing_hassle = 'Change email provider'; 
+
+    my $bouncing_hassle = 'Change email provider';
     signup_user(email_n(6), $bouncing_hassle);
     my $permanent_bounce_email = 'Return-path: <>
 Envelope-to: hm@sandwich.ukcod.org.uk
@@ -489,7 +489,7 @@ X-Env-Sender: hm@sandwich.ukcod.org.uk
 X-Msg-Ref: server-10.tower-72.messagelabs.com!1238685686!51634554!1
 X-StarScan-Version: 6.0.0; banners=-,-,-
 X-Originating-IP: [82.111.230.211]
-X-SpamReason: No, hits=0.0 required=7.0 tests=sa_preprocessor: 
+X-SpamReason: No, hits=0.0 required=7.0 tests=sa_preprocessor:
   VHJ1c3RlZCBJUDogODIuMTExLjIzMC4yMTEgPT4gMzE3NDM=\n
 To: anon@parliament.uk
 Subject: Don\'t forget to...
@@ -505,16 +505,16 @@ X-OriginalArrivalTime: 02 Apr 2009 15:21:29.0243 (UTC) FILETIME=[B23376B0:01C9B3
 
 Message content
     ';
-    
+
     expect_mail_outcome('deleted', $permanent_bounce_email);
 
     # Hassle should no longer be in the set considered for emails
-    my $hassle_output = `./send-hassles --verbose=1 2>&1`;    
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;
     die 'Active hassle for deleted user' if ($hassle_output =~ /$bouncing_hassle/);
 }
 #----------------------------------
 sub do_permanent_dsn_bounce_without_verp_no_email_test(){
-    
+
     my $bouncing_hassle = 'try to remember my email address';
     signup_user(email_n(4), $bouncing_hassle);
     my $dsn_bounce_email = 'Return-path: <>
@@ -526,7 +526,7 @@ Message-Id: <1220976040-13870@students.niu.edu>
 To: <hm@sandwich.ukcod.org.uk>
 MIME-Version: 1.0
 Content-Type: multipart/report; report-type=delivery-status;
-	boundary="1220976040-13870-students.niu.edu"
+    boundary="1220976040-13870-students.niu.edu"
 Subject: Returned mail: User unknown
 Precedence: bulk
 Status: O
@@ -543,7 +543,7 @@ from -
 
    ----- The following address(es) had permanent fatal errors -----
 <anon>; originally to anon (unrecoverable error)
-  	The recipient \'anon\' is unknown
+    The recipient \'anon\' is unknown
 
 --1220976040-13870-students.niu.edu
 Content-type: message/delivery-status
@@ -567,7 +567,7 @@ Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Sender: HassleMe <hm@sandwich.ukcod.org.uk>
 Date: Tue, 09 Sep 2008 17:00:24 +0100
-X-Spam-Score: 0.00 () [Hold at 5.00] 
+X-Spam-Score: 0.00 () [Hold at 5.00]
 X-CanItPRO-Stream: anon redirected to 03_Aggressive
 X-Scanned-By: CanIt (www . roaringpenguin . com) on 131.156.1.111
 
@@ -575,16 +575,16 @@ X-Scanned-By: CanIt (www . roaringpenguin . com) on 131.156.1.111
 
 --1220976040-13870-students.niu.edu--
 ';
-    
+
     expect_mail_outcome('unparsed', $dsn_bounce_email);
 
     # Hassle should still be in the set considered for hassles
-    my $hassle_output = `./send-hassles --verbose=1 2>&1`;    
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;
     die 'No hassle for user where we could not figure out bounce recipient' unless ($hassle_output =~ /$bouncing_hassle/);
-} 
+}
 #----------------------------------
 sub do_verp_bounce_test(){
-    
+
     my $test_hassle = 'Learn all about VERP';
     signup_user(email_n(8), $test_hassle);
     my $verp_bounce_email = 'Return-path: <>
@@ -596,7 +596,7 @@ Message-Id: <1220976040-13870@students.niu.edu>
 To: <' . verp_envelope_sender(email_n(8)) . '>
 MIME-Version: 1.0
 Content-Type: multipart/report; report-type=delivery-status;
-	boundary="1220976040-13870-students.niu.edu"
+    boundary="1220976040-13870-students.niu.edu"
 Subject: Returned mail: User unknown
 Precedence: bulk
 Status: O
@@ -613,7 +613,7 @@ from -
 
    ----- The following address(es) had permanent fatal errors -----
 <anon>; originally to anon (unrecoverable error)
-  	The recipient \'anon\' is unknown
+    The recipient \'anon\' is unknown
 
 --1220976040-13870-students.niu.edu
 Content-type: message/delivery-status
@@ -637,7 +637,7 @@ Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Sender: HassleMe <hm@sandwich.ukcod.org.uk>
 Date: Tue, 09 Sep 2008 17:00:24 +0100
-X-Spam-Score: 0.00 () [Hold at 5.00] 
+X-Spam-Score: 0.00 () [Hold at 5.00]
 X-CanItPRO-Stream: anon redirected to 03_Aggressive
 X-Scanned-By: CanIt (www . roaringpenguin . com) on 131.156.1.111
 
@@ -648,16 +648,38 @@ X-Scanned-By: CanIt (www . roaringpenguin . com) on 131.156.1.111
     expect_mail_outcome('deleted', $verp_bounce_email);
 
     # Hassle should no longer be in the set considered for emails
-    my $hassle_output = `./send-hassles --verbose=1 2>&1`;    
+    my $hassle_output = `./send-hassles --verbose=1 2>&1`;
     die 'Active hassle for deleted user' if ($hassle_output =~ /$test_hassle/);
-    
+
 }
 #----------------------------------
 sub do_basic_signup_test(){
-    
+
     my $test_hassle = 'run the test suite for Hassleme';
     signup_user(email_n(0), $test_hassle);
-    
+
+}
+#----------------------------------
+sub do_no_send_list_test(){
+
+    my $test_hassle = 'run the test suite for Hassleme';
+    my $email = email_n(0);
+
+    dbh()->do('insert into no_send_list(email) values(?);', {}, $email);
+    dbh()->commit();
+
+    $wth->browser_get($base_url);
+    $wth->browser_check_contents("Set up a hassle now!");
+    $wth->browser_check_contents("This is a test site");
+
+    $wth->browser_submit_form(form_name => 'createHassleForm',
+        fields => { freq => "3650",
+                    what => $test_hassle,
+                    email => $email,
+                    public => "true"},
+        );
+    $wth->browser_check_contents("not able to send email to");
+
 }
 #----------------------------------
 # Test the process of signing up for a hassle
@@ -669,23 +691,23 @@ print "Testing deletion of recipient following permanent DSN bounce...\n" if $ve
 do_permanent_dsn_bounce_without_verp_test();
 
 # Test the handling of a non-bounce reply to a hassle - should be ignored
-print "Testing non-bounce reply is ignored...\n" if $verbose > 0; 
+print "Testing non-bounce reply is ignored...\n" if $verbose > 0;
 do_non_bounce_reply_without_verp_test();
 
 # Test the handling of a transient DSN bounce
 print "Testing transient DSN bounce is ignored...\n" if $verbose > 0;
 do_transient_dsn_bounce_without_verp_test();
 
-# Test the handling of a permanent DSN bounce where the recipient can't be figured out 
+# Test the handling of a permanent DSN bounce where the recipient can't be figured out
 print "Testing permanent DSN bounce where recipient can't be parsed - logged as unparsed...\n" if $verbose > 0;
 do_permanent_dsn_bounce_without_verp_no_email_test();
 
-# Test the handling of an unparsable bounce 
+# Test the handling of an unparsable bounce
 print "Testing unparsable bounce - logged as unparsed...\n" if $verbose > 0;
 do_unparsable_bounce_without_verp_test();
 
 # Test the handling of a non-DSN bounce that we've classified as permanent
-print "Testing permanent non DSN bounce - unsubscribe user...\n" if $verbose > 0; 
+print "Testing permanent non DSN bounce - unsubscribe user...\n" if $verbose > 0;
 do_permanent_bounce_without_verp_test();
 
 # Test the handling of a non-DSN bounce that we've classified as transient
@@ -695,6 +717,11 @@ do_transient_bounce_without_verp_test();
 # Test the end-to-end VERP bounce process
 print "Testing that VERP bounces get parsed successfully...\n" if $verbose > 0;
 do_verp_bounce_test();
+
+# Test adding an email address to the no_send_list table
+print "Testing that adding an email address to the no_send_list table means a user won't be signed up..." if $verbose > 0;
+do_no_send_list_test();
+
 
 print "Checking no emails left at end...\n" if $verbose > 0;
 $wth->email_check_none_left();

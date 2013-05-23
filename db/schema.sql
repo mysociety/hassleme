@@ -34,3 +34,7 @@ create table hassle_sent (
     whensent timestamp not null default(current_timestamp)
 );
 
+create table no_send_list (
+    email text not null
+);
+
