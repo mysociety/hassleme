@@ -128,13 +128,8 @@ EOF
     });
 
     my $result = mySociety::EmailUtil::send_email($mail, $sender, $to);
-    if ($result == mySociety::EmailUtil::EMAIL_SUCCESS) {
+    return $result;
 
-    } elsif ($result == mySociety::EmailUtil::EMAIL_SOFT_ERROR) {
-        die "soft error delivering message by email to $to";
-    } else {
-        die "hard error delivering message by email to $to";
-    }
 }
 
 =item token ID
