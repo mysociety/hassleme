@@ -11,7 +11,7 @@ package Hassle;
 
 use DBI;
 use DBD::Pg;
-use Digest::SHA1 qw(sha1_hex);
+use Digest::SHA qw(sha1_hex);
 use IO::Pipe;
 use MIME::QuotedPrint;
 use mySociety::Email;
