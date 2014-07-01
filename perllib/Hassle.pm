@@ -121,6 +121,7 @@ EOF
 
     my $mail = mySociety::Email::construct_email({
         _unwrapped_body_ => $text,
+        _line_indent => '',
         From => ['hassle@hassleme.co.uk', 'HassleBot'],
         Subject => $subject,
         To => $to,
