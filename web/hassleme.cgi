@@ -602,9 +602,15 @@ EOF
 
                 <p><a href="http://www.mysociety.org/privacy-online/">More general information on how third party services work</a></p>
 
+                <h3>How to unsubscribe</h3>
+                <p>If you’ve been hassled enough, you can click the “Unsubscribe” link at the bottom of any HassleMe email to make sure you won’t be reminded again.</p>
+
+                <h3>Mailing address</h3>
+                <p>Our mailing address is: 483 Green Lanes, London, N13 4BS, United Kingdom.</p>
+
                 <h2>Credits</h2>
 
-                <p>Bits of wording taken from the <a href="http://gov.uk/help/cookies">gov.uk cookies page</a> (under the Open Government Licence).
+                <p>Bits of wording taken from the <a href="http://gov.uk/help/cookies">gov.uk cookies page</a> (under the Open Government Licence).</p>
 EOF
     }
     hassle_footer($q);
