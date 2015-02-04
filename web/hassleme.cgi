@@ -40,11 +40,14 @@ sub hassle_header {
     }
     print
         $q->header(-type => 'text/html; charset=utf-8'),
-        $q->start_html(-title=>$header_title,
-                       -style=>{-src=>'/hassleme.css'},
-#                       -script=>{-language=>'JAVASCRIPT',
-#                                 -src=>'yellowFade.js'}
-                       );
+        $q->start_html(
+            -title => $header_title,
+            -style => { -src => [
+                '/hassleme.css',
+                '//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600',
+                '/assets/css/banner.css',
+            ] },
+        );
 
     my $staging = mySociety::Config::get('HM_STAGING') ? 1 : 0;
     if ($staging) {
@@ -53,6 +56,16 @@ sub hassle_header {
             $q->a({href=>'http://www.hassleme.co.uk'}, "www.hassleme.co.uk")
         );
     }
+
+print <<EOF;
+<div class="retirement-banner retirement-banner--hassleme">
+  <div class="retirement-banner__inner">
+    <a class="retirement-banner__logo" href="https://www.mysociety.org/">mySociety</a>
+    <p class="retirement-banner__description">With regret, we’ve made the difficult decision to close this site down from the start of March.</p>
+    <p class="retirement-banner__description">You can still browse the site, but you can no longer create new reminders. <a class="retirement-banner__more" href="https://www.mysociety.org/2015/01/28/goodbye-to-some-old-friends/">Find out more&hellip;</a></p>
+  </div>
+</div>
+EOF
 
     print $q->h1($q->a({href=>'/'},"HassleMe"),
 #                 $q->span({-id=>'betaTest'},
@@ -177,7 +190,6 @@ sub hassle_footer {
 </div></div>
 
 <p id="footer">
-<a href="http://digg.com/software/HassleMe_nags_you_because_your_mother_can_t_do_everything">Digg this!</a> |
 <a href="/faq">FAQ</a> |
 <a href="/privacy">Privacy and cookies</a> |
 Derived from <a href="http://www.mysociety.org/2005/03/17/the-management-power-of-evil/">Hasslebot</a>, a
@@ -402,9 +414,6 @@ to run services like this. For more info see
 <a href="http://www.mysociety.org">http://www.mysociety.org</a>.
 </p>
 </div>
-<p>
-<a href="/">Set up another hassle</a>
-</p>
 EOF
         } else {
                 hassle_header($q,'Oops!');
@@ -452,7 +461,6 @@ EOF
             <div id="message">
                 <p>Below are 100 things which users of HassleMe have asked to be unpredictably
                 reminded of. You may like to see instead <a href="/hassles">100 random hassles</a>.
-                <p><a href="/">Set up your own hassle!</a></p>
             </div>
 EOF
             } else {
@@ -461,7 +469,6 @@ EOF
                 <p>Below are 100 things which users of HassleMe have asked to be unpredictably
                 reminded of. <a href="/hassles">Reload the page</a> for another 100.
                 <strong>Warning!</strong> There may be strong language within hassles, that's just the way people are. Don't read them if that bothers you.</p>
-                <p><a href="/">Set up your own hassle!</a></p>
             </div>
 EOF
         }
@@ -489,7 +496,6 @@ EOF
             print <<EOF;
             <div id="message">
                 <p>You may like to see <a href="/hassles">100 random hassles</a>.
-                <p><a href="/">Set up your own hassle!</a></p>
             </div>
 EOF
         } else {
@@ -498,7 +504,6 @@ EOF
                 <p><a href="/hassles">Reload the page</a> for another 100, or
                 see the <a href="/hassles/longest">longest hassles</a>.
                 </p>
-                <p><a href="/">Set up your own hassle!</a></p>
             </div>
 EOF
         }
