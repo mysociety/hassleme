@@ -97,46 +97,9 @@ sub hassle_form {
     $q->delete('fn');
 
     print $q->div({id=>'createHassleBox'},
-              $q->start_form(-name => 'createHassleForm',
-                             -action => '/',    # XXX
-                             -method => 'POST',
-                             -enctype => 'application/x-www-form-urlencoded',
-                             -accept_charset => 'UTF-8'),
-              $q->hidden(-name => 'fn',
-                         -value => 'home'),
-              $q->hidden(-name => 'f'),
               $q->h2('Set up a hassle now!'),
-              $q->p(
-                    'Hassle me <b>roughly</b> every ',
-                    $q->textfield(-name => 'freq', -size => 3),
-#                    $q->popup_menu(-name => 'units',
-#                                   -values => ['days','hours','minutes']),
-#                        $q->br(),
-#                    ', reminding me to:',
-                    'days, reminding me to:',
-                    $q->textarea(
-                                 -style => 'width: 25em;',
-                                 -name => 'what', -cols => 25, -rows => 3),
-                    ),
-              $q->p(
-                    'Send the emails to: ',
-                    $q->textfield(-name => 'email', -size => 25),
-                    ),
-              $q->ul(
-                    $q->li("We'll send you a confirmation email when you sign up."),
-                    $q->li("If you add more than one email address (separated by commas or semicolons) we'll pick one person at random for each hassle &mdash; good for offices!"),
-                    ),
-              $q->p(
-                    'Can we make the text of this hassle <a href="/hassles">publicly visible</a>?',
-                    $q->br(),
-                    $q->radio_group(-name=>'public',
-                                    -values=>['true','false'],
-                                    -default=>'false',
-                                    -labels=>{'true'=>'Yes','false'=>'No'}),
-                    ),
-              $q->submit(-value => 'Set up this hassle now >>'),
-              $q->end_form(),
-              );
+              $q->p('Signing up for hassles is no longer available.')
+    );
 
     hassle_recent($q);
 }
@@ -230,167 +193,10 @@ while (my $q = new mySociety::CGIFast()) {
     my %fns = map { $_ => 1 } qw(home confirm unsubscribe faq hassles privacy);
     $fn = 'home' if (!exists($fns{$fn}));
 
-    my $created = undef;
-
     if ($fn eq 'home') {
-        my $emails = $q->param('email');
-        my $freq = $q->param('freq');
-        my $units = $q->param('units');
-        my $what = $q->param('what');
-        my $public = lc($q->param('public'));
-
-        my @errors = ( );
-
-        if ($q->param('f')) {
-            if (!defined($freq) || $freq eq '') {
-                push(@errors, "Please tell us how often you want to be hassled");
-            } elsif ($freq !~ /^[1-9]\d*$/) {
-                push(@errors, "Number of days should be a number, like '7'");
-            } elsif ($freq > 3650) {
-                push(@errors, "Surely you want to be hassled more than once every ten years?");
-            }
-
-            if (defined($public)) {
-                if ($public ne 'true' && $public ne 'false') {
-                    push(@errors, "Marking a hassle publicly visible should be either 'true' or 'false'.");
-                }
-            } else {
-                $public = 'false';
-            }
-
-            if (!defined($what) || $what =~ /^\s*$/) {
-                push(@errors, 'Please tell us what you want to be hassled about');
-            }
-
-#            if (!defined($units) || $units eq '') {
-#                push(@errors, "Please select hours or days");
-#            } elsif ($units !~ /(days|hours)/) {
-#                push(@errors, "Sorry, you can only specify hours or days");
-#            }
-
-            my @emails;
-            if (!$emails) {
-                push(@errors, "Please enter an email address or addresses");
-            } else {
-                $emails =~ s/\s//mg;
-                my %e;
-                @emails = grep { ++$e{$_}; $e{$_} == 1 } split('[,;]', $emails);
-                push(@errors, grep { defined($_) } map { Hassle::is_valid_email($_) } @emails);
-            }
-
-            if (!@errors) {
-                # Actually create it.
-                my $hassle_id = dbh()->selectrow_array("select nextval('hassle_id_seq')");
-
-                # TODO - funky arithmetic to modify the frequency
-                # depending on unit of time used (days = no change,
-                # hours, weeks, etc = change).
-
-                # strip out newlines in $what or emails get borked Subject: lines
-
-                $what =~ s/[\r\n]+/ /g;
-
-                # remove the capacity for spammers to put vast
-                # quantities of text in a hassle
-
-                my $what_preview = $what;
-                my $preview_length = 512;
-                if (length($what) > $preview_length) {
-                    $what_preview = substr($what_preview, 0, $preview_length - 3) . '...';
-                }
-
-                my $t0 = time();
-                dbh()->do('
-                        insert into hassle (id, frequency, what, public, ipaddr)
-                        values (?, ?, ?, ?, ?)', {},
-                        $hassle_id, $freq, $what, $public, $q->remote_host());
-
-                my @printable_emails = map { encode_entities($_) } @emails;
-                foreach my $email (@emails) {
-                    my $recipient_id = dbh()->selectrow_array("select nextval('recipient_id_seq')");
-                    dbh()->do('
-                              insert into recipient (id, hassle_id, email)
-                              values (?, ?, ?)', {},
-                              $recipient_id, $hassle_id, $email);
-                    dbh()->commit();
-
-                    my $confirmurl = mySociety::Config::get('WEBURL') . "/C/" . token($recipient_id);
-
-                    my $t1 = time();
-                    sendmail($email, "Please confirm you want to be hassled to \"$what_preview\"",
-                             <<EOF,
-
-Hello,
-
-Someone (hopefully you) has asked for this email address to be hassled roughly every $freq days to:
-
-$what_preview
-
-If you want to be hassled about this, please click on the link below:
-    $confirmurl
-
-If your email program does not let you click on this link, just copy and paste it into your web browser and hit return.
-
-If you have changed your mind and don't want us to nag you, then do nothing - your message will expire and be deleted.
-
-Any other questions? Please email team\@hassleme.co.uk and we'll get back to you as soon as we can.
-
-Thanks!
-
---The HassleMe Team
-
-EOF
-                            );
-                    my $dt = time() - $t1;
-                    warn "sending email to <$email> about hassle #$hassle_id took ${dt}s"
-                        if ($dt > 30);
-                }
-
-                my $dt = time() - $t0;
-                warn "creating hassle #$hassle_id took ${dt}s"
-                    if ($dt > 30);
-
-                $q->delete('what','freq','public');
-
-                $created = 1;
-                my $printable_emails = join(', ',@printable_emails);
-
-                my $singular_or_plural = (@printable_emails == 1
-                                          ? 'a confirmation email'
-                                          : 'confirmation emails');
-
-                hassle_header($q,'Now check your email!');
-                print $q->div({-id=>'message'},
-                            $q->ul(
-                                   $q->li("We've sent $singular_or_plural to <em>$printable_emails</em>; you'll need to click on the link in the email before we can hassle you."),
-                                   $q->li("If you're using <acronym title='Web-based email systems like Oddpost, Gmail, MSN Hotmail, or Yahoo! Mail'>webmail</acronym>, you might want to check your <em>Spam</em>, <em>Junk</em> or <em>Bulk Mail</em> folders."),
-                                   $q->li("<strong>Since you're here, why not set up another hassle (or two)?</strong>")));
-            }
-        } else {
-            hassle_header($q);
-        }
-
-        $q->param('f', 1);
-
-        if (@errors) {
-            hassle_header($q);
-            print $q->h3("Sorry, that didn't work."),
-                  $q->ul({-id=>'errors'},
-                    $q->li([
-                            map { encode_entities($_) } @errors
-                        ])
-                    );
-        }
-        unless ($created || @errors) {
-            hassle_intro();
-        }
-
-        if ($created) {
-            print '<p><a href="/">Set up another hassle</a>.</p>';
-        } else {
-            hassle_form($q);
-        }
-
+        hassle_header($q);
+        hassle_intro();
+        hassle_form($q);
     } elsif ($fn eq 'confirm') {
         my $token = $q->param('token');
         my $id = check_token($token);
@@ -420,7 +226,6 @@ EOF
                 print $q->p({-id=>'errors'},
                             "Sorry. We couldn't understand the link you've followed."
                             );
-                hassle_form($q);
         }
     } elsif ($fn eq 'unsubscribe') {
         my $token = $q->param('token');
@@ -446,7 +251,6 @@ EOF
                     "Sorry. We couldn't understand the link you've followed."
                 );
         }
-        hassle_form($q);
     } elsif ($fn eq 'hassles') {
         my $longest = $q->param('longest') ? 1 : 0;
 
@@ -512,14 +316,6 @@ EOF
                 print <<EOF;
 <dl>
 
-<dt>Something's not working &mdash; who do I tell?</dt>
-
-<dd>Please email <a
-href="mailto:etienne\@mysociety.org">etienne\@mysociety.org</a> with a
-short description of what page you were on; what <em>should</em> have
-happened; what <em>actually</em> happened; and roughly what time the
-error occured. Thanks!</dd>
-
 <dt>What is this site?</dt>
 
 <dd>HassleMe is a tool which nags you. It nags you via email about things
@@ -572,8 +368,7 @@ lives. Our first project was <a
 href="http://www.writetothem.com/">WriteToThem.com</a>, where you can
 write to any of your elected representatives, for free, and our more
 recent sites include <a
-href="http://www.pledgebank.com/">PledgeBank.com</a> and <a
-href="http://www.placeopedia.com/">Placeopedia.com</a>.</dd>
+href="http://www.pledgebank.com/">PledgeBank.com</a>.</dd>
 
 EOF
 
