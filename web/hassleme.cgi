@@ -17,9 +17,15 @@ use IO::Pipe;
 use HTML::Entities;
 use Net::DNS;
 use FindBin;
+use Path::Tiny;
 
 use Hassle;
 use mySociety::Config;
+use Template;
+
+my $tt = Template->new(
+    INCLUDE_PATH => '../templates',
+);
 
 BEGIN {
     mySociety::Config::set_file("$FindBin::Bin/../conf/general");
@@ -190,7 +196,7 @@ while (my $q = new mySociety::CGIFast()) {
 #    $q->autoEscape(0);
     my $fn = lc($q->param('fn'));
     $fn ||= 'home';
-    my %fns = map { $_ => 1 } qw(home confirm unsubscribe faq hassles privacy);
+    my %fns = map { $_ => 1 } qw(home confirm unsubscribe faq hassles privacy terms);
     $fn = 'home' if (!exists($fns{$fn}));
 
     if ($fn eq 'home') {
@@ -412,6 +418,34 @@ EOF
 
                 <p>Bits of wording taken from the <a href="http://gov.uk/help/cookies">gov.uk cookies page</a> (under the Open Government Licence).</p>
 EOF
+    } elsif ($fn eq 'terms') {
+        fn_terms($q);
     }
     hassle_footer($q);
+}
+
+sub fn_terms {
+    my $q = shift;
+    hassle_header($q);
+    my $vars;
+    my $token = $q->param('token');
+    my $email;
+
+    if (my $checked = check_token($q->param('token'))) {
+        if ($checked =~/^TC.(.*)/) {
+            ($email) = dbh()->selectrow_array("select email from recipient where id = ?", {}, $1);
+            $vars->{token} = $token;
+            $vars->{email} = $email;
+        }
+    }
+
+    if (my $action = $q->param('action')) {
+        dbh()->do('insert into tc (email, action) values (?, ?)',
+                    {}, $email, $action);
+        dbh()->commit();
+        $vars->{action} = $action;
+    }
+
+    $tt->process('tcs.tt', $vars)
+        || die $tt->error;
 }
