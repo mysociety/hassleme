@@ -164,3 +164,88 @@ dt {
 dd {
     margin-bottom: 1em;
 }
+
+.tc-header {
+  font-weight: normal;
+  color: #666;
+  font-size: 1em;
+  letter-spacing: 0.05em;
+  font-family: 'Gill Sans MT', 'Gill Sans', Calibri, sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 3em 0 1em;
+}
+
+.tc-section {
+  max-width: 30em;
+  margin: 0 auto;
+}
+
+.tc-section p {
+  font-size: 1.1em;
+  line-height: 1.6em;
+}
+
+.tc-section--changes p {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.tc-promises {
+  text-align: center;
+  padding: 0;
+  margin: 3em 0;
+  list-style: none;
+}
+
+.tc-promises li {
+  display: inline;
+  display: inline-block;
+  width: 12em;
+  vertical-align: top;
+  font-style: italic;
+}
+
+.tc-promises li + li {
+  margin-left: 1em;
+}
+
+.tc-promises img {
+  margin-bottom: 1em;
+}
+
+.tc-decision {
+  border-top: 1px solid #a3b6ff;
+  padding: 1em 0;
+  margin: 3em auto 5em auto;
+  max-width: 30em;
+}
+
+.tc-decision p {
+  font-size: 1.1em;
+  line-height: 1.6em;
+}
+
+.tc-decision__final {
+  text-align: center;
+  margin-top: 2em;
+}
+
+.tc-button,
+.tc-button:link,
+.tc-button:visited {
+  display: inline-block;
+  padding: 0.5em 1em;
+  background-color: #c00;
+  border-radius: 0.3em;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  font-family: 'Gill Sans MT', 'Gill Sans', Calibri, sans-serif;
+  text-transform: uppercase;
+}
+
+.tc-button:hover,
+.tc-button:focus {
+  background-color: #900;
+}
