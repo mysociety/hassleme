@@ -67,8 +67,13 @@ print <<EOF;
 <div class="retirement-banner retirement-banner--hassleme">
   <div class="retirement-banner__inner">
     <a class="retirement-banner__logo" href="https://www.mysociety.org/">mySociety</a>
-    <p class="retirement-banner__description">With regret, we’ve made the difficult decision to close this site down from the start of March.</p>
-    <p class="retirement-banner__description">You can still browse the site, but you can no longer create new reminders. <a class="retirement-banner__more" href="https://www.mysociety.org/2015/01/28/goodbye-to-some-old-friends/">Find out more&hellip;</a></p>
+    <p class="retirement-banner__description">
+        HassleMe is changing!
+    </p>
+    <p class="retirement-banner__description">
+        During the transition period until 9th March, creation of new hassles is disabled.
+        But you can still browse existing ones.
+        <a class="retirement-banner__more" href="/T/TCs">Find out more!</a></p>
   </div>
 </div>
 EOF
@@ -104,7 +109,7 @@ sub hassle_form {
 
     print $q->div({id=>'createHassleBox'},
               $q->h2('Set up a hassle now!'),
-              $q->p('Signing up for hassles is no longer available.')
+              $q->p('Signing up for hassles is not currently available.')
     );
 
     hassle_recent($q);
