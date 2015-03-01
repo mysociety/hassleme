@@ -1,0 +1,77 @@
+#!/usr/bin/perl
+#
+# export-users-and-tc-tokens
+# create a CSV of users and tokens for the new terms & conditions page
+#
+# Copyright (c) 2015 Hakim Cassimally. hakim.cassimally@gmail.com
+#
+
+use strict;
+use warnings;
+use feature 'say';
+
+use FindBin;
+use lib "$FindBin::Bin/../perllib";
+use lib "$FindBin::Bin/../commonlib/perllib";
+
+use DBI;
+use DBD::Pg;
+use Digest::SHA qw(sha1_hex);
+use IO::Pipe;
+use Getopt::Long;
+
+use Hassle;# qw(dbh secret token);
+use mySociety::Config;
+
+BEGIN {
+    mySociety::Config::set_file("$FindBin::Bin/../conf/general");
+}   
+
+our $verbose = 0; 
+our $help;
+
+sub help {
+print <<END
+
+Usage: export-users-and-tc-tokens [OPTION]
+
+Options are
+    --verbose=n   Choose 0 (no output), 1 (debugging output)
+
+END
+}
+
+if (!GetOptions(
+        'verbose=i' =>  \$verbose,
+        'help' =>               \$help,
+    )) {
+    help();
+    exit(1);
+}
+if ($help) {
+    help();
+    exit(0);
+}
+
+sub debug (@);
+if ($verbose > 0) {
+    eval 'sub debug (@) { print STDERR @_; }';
+} else {
+    eval 'sub debug (@) { }';
+}
+
+my $dbh = dbh();
+my $sth = $dbh->prepare(
+   'select min(id), email
+    from recipient
+    where deleted = false 
+        and confirmed = true
+    group by email') or die $dbh->errstr;
+$sth->execute or die $sth->errstr;
+
+say "email,token";
+while (my $row = $sth->fetchrow_arrayref) {
+    my ($id, $email) = @$row;
+    my $token = token( "TC.$id" );
+    say "$email,$token";
+}
