@@ -38,3 +38,9 @@ create table no_send_list (
     email text not null
 );
 
+create table tc (
+    id serial not null primary key,
+    email text not null,
+    action text not null,
+    created timestamp not null default(current_timestamp)
+);

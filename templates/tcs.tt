@@ -1,0 +1,52 @@
+[% IF action %]
+
+    Thanks!  We've registered your intention to [% action %] your account and hassles
+    sent to [% email %] after March 1st.
+
+[% ELSE %]
+
+    <h2 class="tc-header">The bad news</h2>
+
+    <div class="tc-section">
+        <p>On the 1st March, mySociety will <a href="https://www.mysociety.org/2015/01/28/goodbye-to-some-old-friends/"> no longer be running several old services</a>, including HassleMe.</p>
+    </div>
+
+    <h2 class="tc-header">The good news</h2>
+
+    <div class="tc-section">
+        <p>A <strike>breakaway team of rebels</strike> group of people from mySociety
+        have decided to carry on running HassleMe, to keep the great service going
+        and to develop new features.</p>
+
+        <p>The plan is that the new team will run the site with all of the most important
+    principles that you signed up for:</p>
+    </div>
+
+    <ul class="tc-promises">
+        <li><img src="/globe.png" width="64" height="64" alt="Globe"><br>HassleMe will<br>always be free</li>
+        <li><img src="/user_circle.png" width="64" height="64" alt="User Circle"><br>HassleMe will never<br>sell your email address,<br>or send you spam</li>
+        <li><img src="/heart.png" width="64" height="64" alt="Heart"><br>HassleMe will<br>be run by people<br>who love it.</li>
+    </ul>
+
+    <div class="tc-section tc-section--changes">
+        <p>* One thing we <em>will</em> be changing is our Terms and Conditions, so we can, for example, send you important service announcements, as you’d expect.</p>
+    </div>
+
+    <div class="tc-decision">
+    [% IF email  %]
+        <p>If you’re happy with that, you don’t need to do anything. Your service will seamlessly continue, and your Hassles will be delivered as requested.</p>
+
+        <p>If, however, you’d prefer to not to be part of the new HassleMe, you can delete your HassleMe account and all associated Hassles:</p>
+
+        <p class="tc-decision__final">
+            <a class="tc-button" href="/TT/[% token %]/delete">Delete my HassleMe account</a>
+        </p>
+    [% ELSE %]
+        <p>You should have received an email from us with a personalized link to be able to delete
+        your data. If you haven’t, please email us at
+        <a href="mailto:team@hassleme.co.uk">team@hassleme.co.uk</a>
+        </p>
+    [% END %]
+    </div>
+
+[% END %]
