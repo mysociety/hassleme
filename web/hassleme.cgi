@@ -71,7 +71,7 @@ print <<EOF;
         HassleMe is changing!
     </p>
     <p class="retirement-banner__description">
-        During the transition period until 9th March, creation of new hassles is disabled.
+        During the transition period until 12th March, creation of new hassles is disabled.
         But you can still browse existing ones.
         <a class="retirement-banner__more" href="/T/TCs">Find out more!</a></p>
   </div>

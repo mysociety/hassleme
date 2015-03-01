@@ -1,14 +1,14 @@
 [% IF action == 'delete' %]
 
     Thanks!  We've registered your intention to delete your account and hassles
-    sent to [% email %] after March 9th.
+    sent to [% email %] after March 12th.
 
 [% ELSE %]
 
     <h2 class="tc-header">The bad news</h2>
 
     <div class="tc-section">
-        <p>On the 1st March, mySociety will <a href="https://www.mysociety.org/2015/01/28/goodbye-to-some-old-friends/"> no longer be running several old services</a>, including HassleMe.</p>
+        <p>From the beginning of March, mySociety will <a href="https://www.mysociety.org/2015/01/28/goodbye-to-some-old-friends/"> no longer be running several old services</a>, including HassleMe.</p>
     </div>
 
     <h2 class="tc-header">The good news</h2>
