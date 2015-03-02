@@ -434,21 +434,22 @@ sub fn_terms {
     hassle_header($q);
     my $vars;
     my $token = $q->param('token');
-    my $email;
 
     if (my $checked = check_token($token)) {
         if ($checked =~/^TC.(.*)/) {
-            ($email) = dbh()->selectrow_array("select email from recipient where id = ?", {}, $1);
-            $vars->{token} = $token;
-            $vars->{email} = $email;
-        }
-    }
+            my ($email) = dbh()->selectrow_array("select email from recipient where id = ?", {}, $1);
+            if ($email) {
+                $vars->{token} = $token;
+                $vars->{email} = $email;
 
-    if (my $action = $q->param('action')) {
-        dbh()->do('insert into tc (email, action) values (?, ?)',
-                    {}, $email, $action);
-        dbh()->commit();
-        $vars->{action} = $action;
+                if (my $action = $q->param('action')) {
+                    dbh()->do('insert into tc (email, action) values (?, ?)',
+                                {}, $email, $action);
+                    dbh()->commit();
+                    $vars->{action} = $action;
+                }
+            }
+        }
     }
 
     $tt->process('tcs.tt', $vars)
