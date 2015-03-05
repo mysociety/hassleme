@@ -17,9 +17,15 @@ use IO::Pipe;
 use HTML::Entities;
 use Net::DNS;
 use FindBin;
+use Path::Tiny;
 
 use Hassle;
 use mySociety::Config;
+use Template;
+
+my $tt = Template->new(
+    INCLUDE_PATH => '../templates',
+);
 
 BEGIN {
     mySociety::Config::set_file("$FindBin::Bin/../conf/general");
@@ -61,8 +67,13 @@ print <<EOF;
 <div class="retirement-banner retirement-banner--hassleme">
   <div class="retirement-banner__inner">
     <a class="retirement-banner__logo" href="https://www.mysociety.org/">mySociety</a>
-    <p class="retirement-banner__description">With regret, we’ve made the difficult decision to close this site down from the start of March.</p>
-    <p class="retirement-banner__description">You can still browse the site, but you can no longer create new reminders. <a class="retirement-banner__more" href="https://www.mysociety.org/2015/01/28/goodbye-to-some-old-friends/">Find out more&hellip;</a></p>
+    <p class="retirement-banner__description">
+        HassleMe is changing!
+    </p>
+    <p class="retirement-banner__description">
+        During the transition period until 12th March, creation of new hassles is disabled.
+        But you can still browse existing ones.
+        <a class="retirement-banner__more" href="/T/TCs">Find out more!</a></p>
   </div>
 </div>
 EOF
@@ -98,7 +109,7 @@ sub hassle_form {
 
     print $q->div({id=>'createHassleBox'},
               $q->h2('Set up a hassle now!'),
-              $q->p('Signing up for hassles is no longer available.')
+              $q->p('Signing up for hassles is not currently available.')
     );
 
     hassle_recent($q);
@@ -190,7 +201,7 @@ while (my $q = new mySociety::CGIFast()) {
 #    $q->autoEscape(0);
     my $fn = lc($q->param('fn'));
     $fn ||= 'home';
-    my %fns = map { $_ => 1 } qw(home confirm unsubscribe faq hassles privacy);
+    my %fns = map { $_ => 1 } qw(home confirm unsubscribe faq hassles privacy terms);
     $fn = 'home' if (!exists($fns{$fn}));
 
     if ($fn eq 'home') {
@@ -412,6 +423,35 @@ EOF
 
                 <p>Bits of wording taken from the <a href="http://gov.uk/help/cookies">gov.uk cookies page</a> (under the Open Government Licence).</p>
 EOF
+    } elsif ($fn eq 'terms') {
+        fn_terms($q);
     }
     hassle_footer($q);
+}
+
+sub fn_terms {
+    my $q = shift;
+    hassle_header($q);
+    my $vars;
+    my $token = $q->param('token');
+
+    if (my $checked = check_token($token)) {
+        if ($checked =~/^TC.(.*)/) {
+            my ($email) = dbh()->selectrow_array("select email from recipient where id = ?", {}, $1);
+            if ($email) {
+                $vars->{token} = $token;
+                $vars->{email} = $email;
+
+                if (my $action = $q->param('action')) {
+                    dbh()->do('insert into tc (email, action) values (?, ?)',
+                                {}, $email, $action);
+                    dbh()->commit();
+                    $vars->{action} = $action;
+                }
+            }
+        }
+    }
+
+    $tt->process('tcs.tt', $vars)
+        || die $tt->error;
 }
